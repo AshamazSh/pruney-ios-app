@@ -1,4 +1,4 @@
-import SwiftUI
+    import SwiftUI
 import Photos
 
 private enum PruneyStyle {
@@ -29,6 +29,7 @@ struct ContentView: View {
     @State private var analysis = LibraryAnalysis()
     @State private var requestingAccess = false
     @State private var showingSizeInformation = false
+    @State private var showingSwipeReview = false
 
     var body: some View {
         Group {
@@ -135,6 +136,9 @@ struct ContentView: View {
             .background(PruneyStyle.background)
             .navigationTitle("Pruney")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(isPresented: $showingSwipeReview) {
+                SwipeReviewView()
+            }
             .toolbar {
                 if analysis.canRead {
                     ToolbarItem(placement: .topBarTrailing) {
@@ -158,7 +162,8 @@ struct ContentView: View {
                     ? "Review all the photos and videos you’ve shared with Pruney, one swipe at a time."
                     : "Review your entire photo and video library, one swipe at a time.",
                 symbol: "rectangle.stack",
-                isPrimary: true
+                isPrimary: true,
+                action: { showingSwipeReview = true }
             )
             .accessibilityIdentifier("library.startSwiping")
 
@@ -305,11 +310,10 @@ private struct ReviewOptionTile: View {
     let description: String
     let symbol: String
     let isPrimary: Bool
+    var action: () -> Void = {}
 
     var body: some View {
-        Button {
-            // Navigation will be added when the review and filter screens are implemented.
-        } label: {
+        Button(action: action) {
             HStack(alignment: .top, spacing: 16) {
                 Image(systemName: symbol)
                     .font(.title2)

@@ -2,7 +2,7 @@
 
 Pruney is an iOS app for reviewing photos and videos and freeing up storage. The default app language is English.
 
-The first implementation covers onboarding, Photos permission handling, and a library size overview. Filtering, swipe review, deletion, and compression are planned and are not implemented yet.
+The current implementation covers onboarding, Photos permission handling, a library size overview, and a swipe review screen. Filtering and actual deletion/compression are planned and are not implemented yet.
 
 ## Current behavior
 
@@ -14,7 +14,24 @@ The first implementation covers onboarding, Photos permission handling, and a li
 6. With limited access, explain that the totals cover only selected assets and offer a Settings link.
 7. With denied access, explain how to enable access and offer a Settings link. With system restrictions, explain Screen Time or device administration restrictions.
 
-With photo access, the overview also shows two action tiles: **Start swiping** for reviewing the entire accessible library and **Set up filters** for choosing a collection before review. Both are interface placeholders; tapping them currently performs no action and opens no screen. With limited access, the swipe tile describes reviewing only the shared photos and videos.
+With photo access, the overview also shows two action tiles: **Start swiping** pushes the swipe review screen for the entire accessible library. **Set up filters** remains an interface placeholder with no action. With limited access, the swipe tile describes reviewing only the shared photos and videos.
+
+## Swipe review
+
+- Assets initially appear newest first, using a snapshot of the accessible library when the screen opens. The labeled sort menu in the top row can reorder only the remaining queue by date (newest first) or locally measured size (largest first). Previously selected assets and their decisions retain their history order.
+- Size sorting measures uncached remaining assets locally, shows progress, and can be cancelled without changing the queue. Fully measured assets precede partially measured or unavailable assets. No cloud downloads are performed. Review actions are blocked until size sorting finishes or is cancelled.
+- The top row shows red Delete, yellow Resized, and green Skipped counters from left to right, with a sort button on the right showing **By date** or **By size**. Resize and delete counts represent selected decisions, not completed file operations.
+- The current photo is shown without cropping. Live Photos have a corner badge; this version displays their still image rather than Live Photo playback.
+- Videos use the native player with playback controls and a seekable timeline. They start paused and pause when advancing, leaving the screen, sharing, or moving out of the active app state.
+- Creation date and locally measured size appear below the media on the left, with the number of remaining items aligned to the right. Unavailable or partially measured resources are clearly identified. Preview and sharing requests do not download from iCloud.
+- The bottom row contains undo, equally sized 64 pt red delete, yellow resize and green skip buttons from left to right, and a share button. Undo reverses the last decision and places its asset at the front of the current queue, even after changing sort order or reaching the final item. Other remaining items retain their order.
+- Holding undo for 1.5 seconds fills a circular progress ring and opens a reset confirmation. A short tap still undoes one decision; releasing the hold early cancels the ring. Confirming reset clears all session decisions and counters and rebuilds the full queue in the selected sort order. Cancelling the alert preserves selections. An equivalent reset action is available to accessibility users. No originals are modified.
+- The navigation bar’s **forward** button opens a choice of Skip all, Resize all, or Delete all for remaining items, including the current card. The chosen action records a decision for each remaining asset without changing earlier decisions or modifying originals. Undo restores those selections one item at a time, in reverse selection order.
+- Button decisions and completed photo drags animate the current card offscreen: right for skip, up for resize, left for delete. The queue advances after the animation, with repeated decisions, undo, and sharing blocked during departure. Reduce Motion replaces departure with a short fade.
+- One upcoming photo or video poster is prefetched locally and displayed beneath the current card. Dragging reveals it; an insufficient drag returns the current card to its original position. Prefetching does not download cloud resources or start video playback.
+- On photos, swipe right to skip, left to mark for deletion, or up to mark for resizing. Video gestures are reserved for native playback controls; use the buttons to record video decisions.
+- Sharing exports accessible asset resources to temporary files and opens the system share sheet. Live Photos share their still image and motion video as separate files. Temporary exports are removed after dismissal; originals are unchanged.
+- The footer explains that this screen only selects actions and final changes happen later. Decisions exist only for the current review session. They are lost when leaving the screen and starting a new session. Completing the queue shows a summary state without modifying assets.
 
 The overview uses three mutually exclusive categories:
 
@@ -55,8 +72,11 @@ The exact filters, confirmation and undo behavior, handling of previously review
 | Path | Responsibility |
 | --- | --- |
 | `Pruney/PruneyApp.swift` | App entry point and Debug-only onboarding reset |
-| `Pruney/ContentView.swift` | Onboarding, overview, storage bar, and access states |
+| `Pruney/ContentView.swift` | Onboarding, overview, push entry to review, storage bar, and access states |
 | `Pruney/LibraryAnalysis.swift` | Authorization, observable scan state, PhotoKit scanner, and summary models |
+| `Pruney/SwipeReviewView.swift` | Review counters, media player, metadata, action buttons, gestures, and share sheet |
+| `Pruney/SwipeReviewModel.swift` | Session queue, decisions, undo, preview requests, local measurement, and temporary sharing exports |
+| `Pruney/UndoHoldButton.swift` | Native undo button touch handling, 1.5-second hold recognition, and accessible reset action |
 | `PruneyTests/PruneyTests.swift` | Classification, byte totals, partial results, and empty-library unit tests |
 | `PruneyUITests/PruneyUITests.swift` | Permission grant/denial, overview, and onboarding persistence UI tests |
 | `Pruney.xcodeproj` | Xcode project, scheme, build settings, and Photos usage description |

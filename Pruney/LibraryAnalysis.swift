@@ -23,6 +23,11 @@ nonisolated struct MediaUsage: Sendable {
     var count = 0
 }
 
+nonisolated struct MediaMeasurement: Sendable {
+    let bytes: Int64
+    let isComplete: Bool
+}
+
 nonisolated struct LibrarySummary: Sendable {
     var usage: [MediaCategory: MediaUsage] = [:]
     var processed = 0
@@ -69,22 +74,27 @@ actor LibraryScanner {
             try Task.checkCancellation()
             let asset = assets.object(at: index)
             let category = MediaCategory.classify(isVideo: asset.mediaType == .video, isLivePhoto: asset.mediaSubtypes.contains(.photoLive))
-            let resources = PHAssetResource.assetResources(for: asset).filter { $0.type != .adjustmentData }
-            var bytes: Int64 = 0
-            var complete = !resources.isEmpty
-            for resource in resources {
-                try Task.checkCancellation()
-                let result = await read(resource)
-                if let size = result { bytes += size } else { complete = false }
-            }
+            let measurement = try await measure(asset)
             try Task.checkCancellation()
-            summary.record(category: category, bytes: bytes, complete: complete)
+            summary.record(category: category, bytes: measurement.bytes, complete: measurement.isComplete)
             // Limit UI updates while still showing progress on a large library.
             if summary.processed % 10 == 0 || summary.processed == summary.assetCount {
                 await update(summary)
             }
         }
         return summary
+    }
+
+    func measure(_ asset: PHAsset) async throws -> MediaMeasurement {
+        let resources = PHAssetResource.assetResources(for: asset).filter { $0.type != .adjustmentData }
+        var bytes: Int64 = 0
+        var complete = !resources.isEmpty
+        for resource in resources {
+            try Task.checkCancellation()
+            if let size = await read(resource) { bytes += size } else { complete = false }
+        }
+        try Task.checkCancellation()
+        return MediaMeasurement(bytes: bytes, isComplete: complete)
     }
 
     private func read(_ resource: PHAssetResource) async -> Int64? {
