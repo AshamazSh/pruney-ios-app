@@ -45,6 +45,7 @@ final class SwipeReviewModel {
     private var pendingIndex = 0
     private var history: [ReviewSelection] = []
     private var decisionCounts: [ReviewDecision: Int] = [:]
+    private(set) var selectionRevision = UUID()
     private(set) var total = 0
     private(set) var sortOrder: ReviewSortOrder = .date
     private(set) var isSorting = false
@@ -119,6 +120,7 @@ final class SwipeReviewModel {
         history.append(ReviewSelection(asset: asset, decision: decision))
         decisionCounts[decision, default: 0] += 1
         pendingIndex += 1
+        selectionRevision = UUID()
         loadCurrent()
     }
 
@@ -126,6 +128,7 @@ final class SwipeReviewModel {
         guard canUndo else { return }
         guard let selection = history.popLast() else { return }
         decisionCounts[selection.decision, default: 0] -= 1
+        selectionRevision = UUID()
         // Undo always puts the selected asset above the current queue, even after sorting.
         if pendingIndex > 0 && pending[pendingIndex - 1].localIdentifier == selection.asset.localIdentifier {
             pendingIndex -= 1
@@ -148,6 +151,7 @@ final class SwipeReviewModel {
         pendingIndex = 0
         history.removeAll()
         decisionCounts.removeAll()
+        selectionRevision = UUID()
         sortOrder = .date
         loadCurrent()
         if previousSort == .size { setSortOrder(.size) }
@@ -160,7 +164,15 @@ final class SwipeReviewModel {
         }
         decisionCounts[decision, default: 0] += remaining
         pendingIndex = pending.count
+        selectionRevision = UUID()
         loadCurrent()
+    }
+
+    func makeActionPlan() -> ReviewActionPlan {
+        ReviewActionPlan(
+            resizeAssets: history.filter { $0.decision == .resized }.map(\.asset),
+            deleteAssets: history.filter { $0.decision == .deleted }.map(\.asset)
+        )
     }
 
     func setSortOrder(_ order: ReviewSortOrder) {

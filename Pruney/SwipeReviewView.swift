@@ -13,7 +13,6 @@ extension ReviewDecision {
 }
 
 struct SwipeReviewView: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var review = SwipeReviewModel()
@@ -27,6 +26,9 @@ struct SwipeReviewView: View {
     @State private var showingResetConfirmation = false
     @State private var holdingUndo = false
     @State private var undoHoldProgress: CGFloat = 0
+    @State private var actionPlan: ReviewActionPlan?
+    @State private var actionPlanRevision: UUID?
+    @State private var showingActionSettings = false
 
     var body: some View {
         VStack(spacing: 20) {
@@ -49,6 +51,11 @@ struct SwipeReviewView: View {
         .safeAreaInset(edge: .bottom, spacing: 0) { actions }
         .navigationTitle("Swipe your library")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(isPresented: $showingActionSettings) {
+            if let actionPlan {
+                ReviewActionSettingsView(plan: actionPlan, stage: actionPlan.resizeItems.isEmpty ? .delete : .resize)
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Choose for all remaining items", systemImage: "forward") {
@@ -354,7 +361,7 @@ struct SwipeReviewView: View {
                 .accessibilityIdentifier("review.share")
             }
             .buttonStyle(.plain)
-            Text("Choose now. Apply later.")
+            Text("No changes applied yet.")
                 .font(.caption2)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -461,8 +468,15 @@ struct SwipeReviewView: View {
             Text("You’ve chosen an action for every item. Final changes happen later; your originals are unchanged.")
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-            Button("Back to library") { dismiss() }
+            Button("Continue to actions") {
+                if actionPlanRevision != review.selectionRevision {
+                    actionPlan = review.makeActionPlan()
+                    actionPlanRevision = review.selectionRevision
+                }
+                showingActionSettings = true
+            }
                 .buttonStyle(.borderedProminent)
+                .accessibilityIdentifier("review.continueToActions")
             Spacer()
         }
         .padding(24)

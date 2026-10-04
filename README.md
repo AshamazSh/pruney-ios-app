@@ -2,7 +2,7 @@
 
 Pruney is an iOS app for reviewing photos and videos and freeing up storage. The default app language is English.
 
-The current implementation covers onboarding, Photos permission handling, a library size overview, and a swipe review screen. Filtering and actual deletion/compression are planned and are not implemented yet.
+The current implementation covers onboarding, Photos permission handling, a library size overview, swipe review, and resize/deletion settings. Filtering and actual deletion/compression are planned and are not implemented yet.
 
 ## Current behavior
 
@@ -31,7 +31,19 @@ With photo access, the overview also shows two action tiles: **Start swiping** p
 - One upcoming photo or video poster is prefetched locally and displayed beneath the current card. Dragging reveals it; an insufficient drag returns the current card to its original position. Prefetching does not download cloud resources or start video playback.
 - On photos, swipe right to skip, left to mark for deletion, or up to mark for resizing. Video gestures are reserved for native playback controls; use the buttons to record video decisions.
 - Sharing exports accessible asset resources to temporary files and opens the system share sheet. Live Photos share their still image and motion video as separate files. Temporary exports are removed after dismissal; originals are unchanged.
-- The footer explains that this screen only selects actions and final changes happen later. Decisions exist only for the current review session. They are lost when leaving the screen and starting a new session. Completing the queue shows a summary state without modifying assets.
+- The footer explains that this screen only selects actions and final changes happen later. Decisions exist only for the current review session. They are lost when leaving the screen and starting a new session. Completing the queue shows **Continue to actions**, which pushes the settings flow without modifying assets.
+
+## Action settings
+
+- If any assets were marked for resizing, **Continue to actions** opens Resize settings first. Otherwise it opens Delete settings directly, including an empty state when all assets were skipped.
+- Both screens show a three-column grid split into Photos, Live Photos, and Videos. Empty sections are omitted. Assets retain the order they were added to the corresponding decision list within each section.
+- All candidate assets start checked. Tapping a tile or its checkmark toggles inclusion without removing it from the grid. Deselected thumbnails fade while their selection controls remain visible. Resize checks are yellow; delete checks are red.
+- Each selected resize tile has a bottom-right **Compression** menu with four levels: Light, Balanced, High, and Maximum. The tile shows the selected name; Maximum is the default, preserving the intent of the previous 50% setting. Deselected items retain their value, but their compression control is hidden until reselected. Levels are draft settings; encoder parameters and resulting file sizes have not been defined yet.
+- The Resize settings navigation bar has an **Apply all** menu with the same four compression levels. Choosing a level updates every resize candidate, including deselected items, without changing their selection state or modifying originals.
+- Compression controls keep a consistent width within each tile, preserving their capsule corners when switching between shorter and longer level names.
+- **Continue to deletion** pushes Delete settings after Resize settings, even if no assets were marked for deletion. Deletion tiles have no compression menu.
+- Changes persist when navigating between settings screens and when reopening them from an unchanged completed review. Changing the swipe decisions or resetting the review creates a new plan the next time settings are opened.
+- These screens configure actions only. They do not write to the photo library, perform compression, or delete any files. There is no final execution screen yet.
 
 The overview uses three mutually exclusive categories:
 
@@ -65,7 +77,7 @@ The agreed direction is to select a media collection using tiles before reviewin
 
 Proposed collection tiles include Photos, Videos, Live Photos, and Screenshots. Live Photos belong to the broader photo collection, with a separate tile for focused review; they do not belong to standalone videos. Collection tiles may overlap, but a review queue should contain each asset only once.
 
-The exact filters, confirmation and undo behavior, handling of previously reviewed assets, compression quality, and handling of originals still need to be finalized before implementation. Converting a Live Photo to a still image is a proposed option, not an implemented compression feature.
+The exact filters, final execution and confirmation behavior, handling of previously reviewed assets, compression encoding, and handling of originals still need to be finalized before implementation. Converting a Live Photo to a still image is a proposed option, not an implemented compression feature.
 
 ## Project structure
 
@@ -77,6 +89,8 @@ The exact filters, confirmation and undo behavior, handling of previously review
 | `Pruney/SwipeReviewView.swift` | Review counters, media player, metadata, action buttons, gestures, and share sheet |
 | `Pruney/SwipeReviewModel.swift` | Session queue, decisions, undo, preview requests, local measurement, and temporary sharing exports |
 | `Pruney/UndoHoldButton.swift` | Native undo button touch handling, 1.5-second hold recognition, and accessible reset action |
+| `Pruney/ReviewActionPlan.swift` | Draft resize/deletion selections, per-item compression settings, and action stages |
+| `Pruney/ReviewActionSettingsView.swift` | Three-column sectioned settings grids, local thumbnails, selection controls, and navigation between stages |
 | `PruneyTests/PruneyTests.swift` | Classification, byte totals, partial results, and empty-library unit tests |
 | `PruneyUITests/PruneyUITests.swift` | Permission grant/denial, overview, and onboarding persistence UI tests |
 | `Pruney.xcodeproj` | Xcode project, scheme, build settings, and Photos usage description |
