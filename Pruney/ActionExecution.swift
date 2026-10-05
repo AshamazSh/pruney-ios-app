@@ -38,6 +38,13 @@ final class ActionExecution {
         let deletes = plan.deleteItems.filter(\.isSelected).map(\.asset)
         let resizes = plan.resizeItems.filter(\.isSelected)
         guard !deletes.isEmpty || !resizes.isEmpty else { return }
+        let access = ProAccess.shared
+        guard access.permits(deletions: deletes.count, replacements: resizes.count) else {
+            hasStarted = true
+            isFinished = true
+            issues.append(ActionExecutionIssue(title: "Free allowance exceeded", message: "Your selection exceeds the free per-run limit. Return to review and reduce your choices or unlock Pruney Pro. No actions were applied."))
+            return
+        }
         hasStarted = true
         isRunning = true
         total = deletes.count + resizes.count

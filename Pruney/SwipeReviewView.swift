@@ -32,6 +32,12 @@ struct SwipeReviewView: View {
     @State private var showingActionSettings = false
     @State private var directDeletion = ActionExecution()
     @State private var deletionError: String?
+    @State private var offeredAllowance: FreeAllowance?
+    @State private var deferredDecision: ReviewDecision?
+    @State private var deferredBulk = false
+    @State private var deferredAssetID: String?
+    @State private var upgradeConfirmed = false
+    @State private var upgradeToken = UUID()
 
     init(filters: [ReviewFilter] = [], onReturnToLibrary: @escaping (Bool) -> Void = { _ in }) {
         self.onReturnToLibrary = onReturnToLibrary
@@ -141,6 +147,14 @@ struct SwipeReviewView: View {
         }
         .sheet(item: $review.share, onDismiss: { review.clearShare() }) { share in
             ReviewShareSheet(files: share.files)
+        }
+        .sheet(item: $offeredAllowance, onDismiss: resolveUpgrade) { allowance in
+            let token = upgradeToken
+            ProPurchaseView(allowance: allowance,
+                            remainingSelections: max(0, allowance.limit - review.count(allowance == .deletions ? .deleted : .resized)),
+                            onUnlock: {
+                                if upgradeToken == token && offeredAllowance != nil { upgradeConfirmed = true }
+                            })
         }
         .alert("Unable to share", isPresented: Binding(get: { review.shareError != nil }, set: { if !$0 { review.shareError = nil } })) {
             Button("OK", role: .cancel) { review.shareError = nil }
@@ -410,6 +424,12 @@ struct SwipeReviewView: View {
                 .font(.caption2)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+            if !ProAccess.shared.isPro {
+                Text("This run: \(max(0, FreeAllowance.deletions.limit - review.count(.deleted))) deletes · \(max(0, FreeAllowance.replacements.limit - review.count(.resized))) conversions left")
+                    .font(.caption2).foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .accessibilityIdentifier("review.freeAllowance")
+            }
             if review.excludedFormatCount > 0 {
                 Text("\(review.excludedFormatCount) unsupported items excluded")
                     .font(.caption2).foregroundStyle(.secondary)
@@ -480,6 +500,7 @@ struct SwipeReviewView: View {
 
     private func record(_ decision: ReviewDecision) {
         guard review.canDecide, !isAnimatingDecision else { return }
+        guard allowDecision(decision, adding: 1, bulk: false) else { return }
         review.pause()
         isAnimatingDecision = true
         outgoingDecision = decision
@@ -511,8 +532,43 @@ struct SwipeReviewView: View {
 
     private func selectAll(_ decision: ReviewDecision) {
         guard review.canDecide, !isAnimatingDecision else { return }
+        guard allowDecision(decision, adding: review.remaining, bulk: true) else { return }
         drag = .zero
         withAnimation(.easeInOut(duration: 0.2)) { review.decideAll(decision) }
+    }
+
+    private func allowDecision(_ decision: ReviewDecision, adding: Int, bulk: Bool) -> Bool {
+        guard decision != .skipped else { return true }
+        let access = ProAccess.shared
+        guard !access.isPro else { return true }
+        let allowance: FreeAllowance = decision == .deleted ? .deletions : .replacements
+        guard review.count(decision) + adding > allowance.limit else { return true }
+        review.pause()
+        withAnimation(.snappy) { drag = .zero }
+        deferredDecision = decision
+        deferredBulk = bulk
+        deferredAssetID = review.currentAsset?.localIdentifier
+        upgradeConfirmed = false
+        upgradeToken = UUID()
+        offeredAllowance = allowance
+        return false
+    }
+
+    private func resolveUpgrade() {
+        let decision = deferredDecision
+        let bulk = deferredBulk
+        let assetID = deferredAssetID
+        let confirmed = upgradeConfirmed
+        deferredDecision = nil
+        deferredBulk = false
+        deferredAssetID = nil
+        upgradeConfirmed = false
+        upgradeToken = UUID()
+        // Cancel never selects an item. Resume only after a verified unlock in the same queue position.
+        guard confirmed, ProAccess.shared.isPro, let decision,
+              review.currentAsset?.localIdentifier == assetID else { return }
+        // A rejected bulk action stays cancelled; the user can explicitly choose it again after unlocking.
+        if !bulk { record(decision) }
     }
 
     private var completion: some View {

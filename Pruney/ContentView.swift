@@ -35,8 +35,10 @@ struct ContentView: View {
         }
         .tint(PruneyStyle.plum)
         .task { if hasCompletedOnboarding { analysis.refresh() } }
+        .task { await ProAccess.shared.start() }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active, hasCompletedOnboarding { analysis.refresh() }
+            if phase == .active { Task { await ProAccess.shared.start() } }
             if phase == .background { analysis.suspend() }
         }
     }

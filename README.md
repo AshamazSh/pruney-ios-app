@@ -66,6 +66,21 @@ With photo access, the overview shows two action tiles only after library analys
 - Changes persist when returning from the final overview and when reopening settings from an unchanged completed review. Changing the swipe decisions or resetting the review creates a new plan the next time settings are opened.
 - The final overview shows selected counts for Delete, Resize, and Make static by media category, plus compression level counts for regular photos and videos only. Unchecked resize items are excluded; deletion choices can be changed using undo before entering settings. The Recently Deleted footnote has been moved to the main library screen.
 
+## Free allowance and lifetime Pro
+
+- The free plan allows up to 50 selected deletions and 10 selected resize or Make static replacements per execution run. The limits are independent: one run may contain both 50 deletions and 10 conversions. There is no cumulative or daily limit, so users can start further free reviews with the full allowance. Keep, analysis, sharing, and all filters remain free and unlimited. Removing an original as part of a replacement does not count as another deletion.
+- Swipe/button decisions reserve capacity within the current review only. A single action that would exceed its per-run limit presents a Pruney Pro purchase sheet before the card advances. Cancel or sheet dismissal returns the card to its original position and preserves all choices. A verified purchase or restoration resumes that single pending selection only if the same asset is still current. Pending, cancelled, unavailable, failed, and unverified purchases do not unlock Pro or advance the card.
+- Bulk Delete or Resize / Make static is checked against the entire remaining queue plus current choices. An over-limit bulk action is cancelled completely; nothing is selected partially. It stays cancelled after unlocking, and the user can explicitly choose it again. Keep all bypasses limit checks. Undo/reset release session reservations. The review footer shows remaining capacity for this run.
+- Execution rechecks the selected plan against the same 50/10 limits before making Photos changes, including when a lifetime entitlement has been revoked. Deselecting replacement candidates reduces the execution count. No usage is accumulated or persisted after success, failure, or cancellation; Pro removes both per-run limits.
+- Lifetime Pro uses StoreKit 2 and a non-consumable product, verified current entitlements, transaction updates, and a user-initiated Restore purchases action. Purchase and entitlement checks respect revocation. There is no subscription or recurring charge. The sheet displays StoreKit's localized price and disables purchasing if the product is unavailable; it never substitutes a fake unlock.
+- Previous cumulative free-usage Keychain records are no longer read or written and have no effect on the new limits. Review choices remain session-only; purchase ownership continues to come from StoreKit.
+
+### Store setup
+
+Create **Pruney Pro Lifetime** in App Store Connect as a **Non-Consumable** In-App Purchase with product ID `com.ashamazsh.pruney.pro.lifetime`, matching `ProAccess.productID`. Configure its English name/description, price, availability, and review information under this app. The price has not been chosen or hardcoded in the app. Configure the same product ID/type in an Xcode StoreKit configuration if local purchase simulation is desired; no StoreKit configuration is enabled by this change. Real purchases require the App Store Connect product and appropriate signing/distribution setup. Those external settings have not been created or changed here.
+
+The implementation has been build-checked only. Purchase/restore, pending approval, cancellations, refunds, unavailable products, quota boundaries, undo/reset, bulk rejection, per-run limit renewal, and final-plan validation require simulator/device and StoreKit sandbox verification. Tests have not been run.
+
 ## Applying actions
 
 - In sessions that enter replacement settings, **Start** on the final overview immediately begins execution without an additional in-app confirmation. It uses the same large, full-width primary button style as filter Apply. PhotoKit retains its system confirmations. Starting is disabled when no items are selected.
@@ -122,6 +137,8 @@ Additional collection filters and handling of assets reviewed in previous sessio
 | --- | --- |
 | `Pruney/PruneyApp.swift` | App entry point and Debug-only onboarding reset |
 | `Pruney/PruneyStyle.swift` | Shared appearance-aware brand accent, foreground, and background colors |
+| `Pruney/ProAccess.swift` | Verified lifetime entitlement, StoreKit purchase/restore, and per-run free-limit validation |
+| `Pruney/ProPurchaseView.swift` | In-review lifetime purchase sheet and restore controls |
 | `Pruney/ContentView.swift` | Onboarding, overview, push entry to review, storage bar, and access states |
 | `Pruney/LibraryAnalysis.swift` | Authorization, observable scan state, PhotoKit scanner, and summary models |
 | `Pruney/SwipeReviewView.swift` | Review counters, media player, metadata, action buttons, gestures, and share sheet |
