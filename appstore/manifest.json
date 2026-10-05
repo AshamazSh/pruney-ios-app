@@ -1,0 +1,355 @@
+{
+  "size": "6.5-inch",
+  "screenshots": [
+    {
+      "language": "en",
+      "file": "01-overview.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "overview"
+    },
+    {
+      "language": "en",
+      "file": "02-swipe.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "swipe"
+    },
+    {
+      "language": "en",
+      "file": "03-filters.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "filters"
+    },
+    {
+      "language": "en",
+      "file": "04-resize.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "resize"
+    },
+    {
+      "language": "en",
+      "file": "05-final.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "final"
+    },
+    {
+      "language": "es",
+      "file": "01-overview.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "overview"
+    },
+    {
+      "language": "es",
+      "file": "02-swipe.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "swipe"
+    },
+    {
+      "language": "es",
+      "file": "03-filters.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "filters"
+    },
+    {
+      "language": "es",
+      "file": "04-resize.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "resize"
+    },
+    {
+      "language": "es",
+      "file": "05-final.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "final"
+    },
+    {
+      "language": "pt-BR",
+      "file": "01-overview.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "overview"
+    },
+    {
+      "language": "pt-BR",
+      "file": "02-swipe.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "swipe"
+    },
+    {
+      "language": "pt-BR",
+      "file": "03-filters.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "filters"
+    },
+    {
+      "language": "pt-BR",
+      "file": "04-resize.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "resize"
+    },
+    {
+      "language": "pt-BR",
+      "file": "05-final.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "final"
+    },
+    {
+      "language": "de",
+      "file": "01-overview.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "overview"
+    },
+    {
+      "language": "de",
+      "file": "02-swipe.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "swipe"
+    },
+    {
+      "language": "de",
+      "file": "03-filters.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "filters"
+    },
+    {
+      "language": "de",
+      "file": "04-resize.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "resize"
+    },
+    {
+      "language": "de",
+      "file": "05-final.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "final"
+    },
+    {
+      "language": "fr",
+      "file": "01-overview.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "overview"
+    },
+    {
+      "language": "fr",
+      "file": "02-swipe.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "swipe"
+    },
+    {
+      "language": "fr",
+      "file": "03-filters.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "filters"
+    },
+    {
+      "language": "fr",
+      "file": "04-resize.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "resize"
+    },
+    {
+      "language": "fr",
+      "file": "05-final.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "final"
+    },
+    {
+      "language": "it",
+      "file": "01-overview.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "overview"
+    },
+    {
+      "language": "it",
+      "file": "02-swipe.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "swipe"
+    },
+    {
+      "language": "it",
+      "file": "03-filters.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "filters"
+    },
+    {
+      "language": "it",
+      "file": "04-resize.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "resize"
+    },
+    {
+      "language": "it",
+      "file": "05-final.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "final"
+    },
+    {
+      "language": "ru",
+      "file": "01-overview.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "overview"
+    },
+    {
+      "language": "ru",
+      "file": "02-swipe.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "swipe"
+    },
+    {
+      "language": "ru",
+      "file": "03-filters.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "filters"
+    },
+    {
+      "language": "ru",
+      "file": "04-resize.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "resize"
+    },
+    {
+      "language": "ru",
+      "file": "05-final.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "final"
+    },
+    {
+      "language": "ja",
+      "file": "01-overview.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "overview"
+    },
+    {
+      "language": "ja",
+      "file": "02-swipe.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "swipe"
+    },
+    {
+      "language": "ja",
+      "file": "03-filters.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "filters"
+    },
+    {
+      "language": "ja",
+      "file": "04-resize.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "resize"
+    },
+    {
+      "language": "ja",
+      "file": "05-final.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "final"
+    },
+    {
+      "language": "ko",
+      "file": "01-overview.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "overview"
+    },
+    {
+      "language": "ko",
+      "file": "02-swipe.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "swipe"
+    },
+    {
+      "language": "ko",
+      "file": "03-filters.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "filters"
+    },
+    {
+      "language": "ko",
+      "file": "04-resize.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "resize"
+    },
+    {
+      "language": "ko",
+      "file": "05-final.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "final"
+    },
+    {
+      "language": "zh-Hans",
+      "file": "01-overview.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "overview"
+    },
+    {
+      "language": "zh-Hans",
+      "file": "02-swipe.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "swipe"
+    },
+    {
+      "language": "zh-Hans",
+      "file": "03-filters.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "filters"
+    },
+    {
+      "language": "zh-Hans",
+      "file": "04-resize.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "resize"
+    },
+    {
+      "language": "zh-Hans",
+      "file": "05-final.png",
+      "width": 1242,
+      "height": 2688,
+      "scene": "final"
+    }
+  ]
+}

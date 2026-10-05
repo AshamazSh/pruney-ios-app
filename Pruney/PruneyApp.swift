@@ -18,7 +18,15 @@ struct PruneyApp: App {
 
     var body: some Scene {
         WindowGroup {
+            #if DEBUG
+            if let scene = AppStoreScreenshot.scene {
+                AppStoreScreenshotView(scene: scene)
+            } else {
+                ContentView()
+            }
+            #else
             ContentView()
+            #endif
         }
     }
 }

@@ -7,6 +7,18 @@ struct ReviewFiltersView: View {
     @State private var showingReview = false
     @State private var appliedFilters: [ReviewFilter] = []
 
+    init(onReturnToLibrary: @escaping (Bool) -> Void = { _ in }) {
+        self.onReturnToLibrary = onReturnToLibrary
+        #if DEBUG
+        if AppStoreScreenshot.scene == "filters" {
+            _filters = State(initialValue: [
+                ReviewFilter(category: .photo, sizeMegabytes: 5),
+                ReviewFilter(category: .video, sizeMegabytes: 50)
+            ])
+        }
+        #endif
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 12) {

@@ -41,7 +41,11 @@ struct SwipeReviewView: View {
 
     init(filters: [ReviewFilter] = [], onReturnToLibrary: @escaping (Bool) -> Void = { _ in }) {
         self.onReturnToLibrary = onReturnToLibrary
-        _review = State(initialValue: SwipeReviewModel(filters: filters))
+        let model = SwipeReviewModel(filters: filters)
+        #if DEBUG
+        if AppStoreScreenshot.scene == "swipe" { model.prepareAppStoreScreenshot() }
+        #endif
+        _review = State(initialValue: model)
     }
 
     var body: some View {

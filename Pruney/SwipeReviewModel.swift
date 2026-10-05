@@ -110,6 +110,19 @@ final class SwipeReviewModel {
     var canSort: Bool { hasAccess && remaining > 1 && !isPreparingShare }
     func count(_ decision: ReviewDecision) -> Int { decisionCounts[decision, default: 0] }
 
+    #if DEBUG
+    func prepareAppStoreScreenshot() {
+        pending = AppStoreScreenshot.assets
+        pendingIndex = min(6, max(0, pending.count - 1))
+        total = pending.count
+        history = pending.prefix(pendingIndex).enumerated().map {
+            ReviewSelection(asset: $0.element, decision: ReviewDecision.allCases[$0.offset % 3])
+        }
+        decisionCounts = [.skipped: 2, .resized: 2, .deleted: 2]
+        loaded = true
+    }
+    #endif
+
     func start() {
         let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         hasAccess = status == .authorized || status == .limited

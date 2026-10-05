@@ -133,6 +133,19 @@ final class LibraryAnalysis: NSObject, PHPhotoLibraryChangeObserver {
     }
 
     func refresh() {
+        #if DEBUG
+        if AppStoreScreenshot.scene != nil {
+            authorization = .authorized
+            summary = LibrarySummary(usage: [
+                .photo: MediaUsage(bytes: 1_840_000_000, count: 428),
+                .livePhoto: MediaUsage(bytes: 940_000_000, count: 86),
+                .video: MediaUsage(bytes: 8_020_000_000, count: 54)
+            ], processed: 568, assetCount: 568)
+            hasAnalyzed = true
+            isAnalyzing = false
+            return
+        }
+        #endif
         isForeground = true
         let previous = authorization
         authorization = PHPhotoLibrary.authorizationStatus(for: .readWrite)

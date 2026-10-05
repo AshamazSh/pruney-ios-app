@@ -234,3 +234,9 @@ xcodebuild -project Pruney.xcodeproj -scheme Pruney \
 The unit tests cover classification and aggregation. UI tests cover full permission access, denied access, and skipping onboarding after a restart. Limited access, system restrictions, cloud-only resources, and large libraries also need manual verification; existing tests do not cover all of these cases.
 
 For a Debug build, the launch argument `-resetOnboarding` clears the `hasCompletedOnboarding` preference. It does not reset Photos permissions. UI tests reset Photos authorization separately and retain screenshots as test attachments.
+
+## App Store presentation
+
+The `appstore/` folder contains five promotional screenshots and a metadata text file for each of the ten supported languages. Screenshots use the 6.5-inch 1242 × 2688 format, localized titles, a phone frame, and actual app screens with read-only demonstration states. See [appstore/README.md](appstore/README.md) for language mappings, source artwork, and regeneration commands.
+
+Debug builds recognize `-appStoreScreenshot overview|swipe|filters|resize|final` for asset capture. This presentation disables interaction, uses representative library totals and selections, and never executes changes. It requires demonstration media in a dedicated simulator for previews. The fixture and launch argument are excluded from Release builds; regular launches retain the normal onboarding and Photos access flow.

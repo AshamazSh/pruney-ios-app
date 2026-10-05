@@ -1,0 +1,452 @@
+{
+  "en": {
+    "locale": "en_US",
+    "name": "Pruney: Photo & Video Cleaner",
+    "subtitle": "Keep memories. Clear the rest.",
+    "promotional": "Make room for new memories. Swipe through photos and videos, filter what matters, and resize supported files. Unlock unlimited actions with lifetime Pro.",
+    "keywords": "storage,cleanup,gallery,organize,compress,resize,space,swipe,media,library",
+    "description": "Make room for the moments you want to keep. Pruney helps you review your photo library, choose what to delete, and reduce the size of supported photos and videos.\n\nSEE YOUR LIBRARY\nView accessible file sizes for photos, Live Photos, and videos in one clear overview. These measurements are not exact device storage usage or guaranteed space savings.\n\nREVIEW WITH SWIPES\nSwipe left to select deletion, right to keep, or up to resize. For Live Photos, the upward action makes them static. Undo a decision or apply an action to the remaining items. Reviewing does not change your files.\n\nFILTER BEFORE YOU START\nChoose media type, creation date, and file size. Combine conditions in a filter, or add alternative filters to build the review you need.\n\nCHOOSE YOUR RESIZE LEVEL\nPick Light, Balanced, High, or Maximum for supported photos and videos. Photo levels retain 90%, 80%, 70%, or 50% of the original width and height, not file size. Video levels use a compatible smaller resolution. Supported photo formats are preserved. Live Photos can become ordinary photos without the motion effect.\n\nYOU DECIDE WHEN TO APPLY\nReview your selection before starting. Resizing and static conversion save a replacement and delete the original. Photos may request system confirmation. Deleted files remain in Recently Deleted for up to 30 days; empty that album yourself to free space immediately.\n\nFREE TO START\nEach session includes up to 50 deletions and 10 resize or static conversions. Keeping items is unlimited. Pruney Pro is an optional one-time lifetime purchase for unlimited actions, with no subscription.\n\nPruney works with the Photos access you grant, including limited access. Library analysis and file-size filtering do not download cloud-only resources. Unsupported media is excluded from review.",
+    "screens": [
+      [
+        [
+          "Know your",
+          "photo library"
+        ],
+        "Photos, Live Photos and videos at a glance."
+      ],
+      [
+        [
+          "A swipe. A choice.",
+          "More room."
+        ],
+        "Keep, delete or resize. You stay in control."
+      ],
+      [
+        [
+          "Focus on what",
+          "matters"
+        ],
+        "Filter by type, date and file size."
+      ],
+      [
+        [
+          "Keep the moment.",
+          "Reduce the size."
+        ],
+        "Choose a resize level for each supported file."
+      ],
+      [
+        [
+          "Review first.",
+          "Apply when ready."
+        ],
+        "A clear overview before you start."
+      ]
+    ]
+  },
+  "es": {
+    "locale": "es_ES",
+    "name": "Pruney: Limpieza de fotos",
+    "subtitle": "Guarda recuerdos, libera sitio",
+    "promotional": "Haz sitio para nuevos recuerdos. Revisa fotos y vídeos deslizando, filtra y reduce el tamaño de archivos compatibles. Acciones ilimitadas con Pro de por vida.",
+    "keywords": "espacio,limpieza,galería,organizar,comprimir,reducir,almacenamiento,deslizar",
+    "description": "Haz sitio para los momentos que quieres conservar. Pruney te ayuda a revisar tu fototeca, elegir qué borrar y reducir el tamaño de fotos y vídeos compatibles.\n\nTU FOTOTECA DE UN VISTAZO\nConsulta el tamaño de los archivos accesibles de fotos, Live Photos y vídeos. Las mediciones no indican el uso exacto del almacenamiento ni garantizan cuánto espacio liberarás.\n\nREVISA DESLIZANDO\nDesliza a la izquierda para elegir borrar, a la derecha para conservar o hacia arriba para reducir el tamaño. En las Live Photos, esta última acción las convierte en fotos estáticas. Deshaz decisiones o aplica una acción a los elementos restantes. Revisar no modifica tus archivos.\n\nFILTRA ANTES DE EMPEZAR\nSelecciona tipo, fecha de creación y tamaño. Combina condiciones en un filtro o añade filtros alternativos.\n\nELIGE EL NIVEL\nLigero, equilibrado, alto o máximo para fotos y vídeos compatibles. Las fotos conservan el 90, 80, 70 o 50 % de su ancho y alto, no de su tamaño de archivo. Los vídeos usan una resolución menor compatible. Se conserva el formato de las fotos compatibles. Las Live Photos pueden convertirse en fotos sin movimiento.\n\nAPLICA CUANDO ESTÉS LISTO\nComprueba tu selección antes de empezar. La reducción y la conversión estática guardan una copia y borran el original. Fotos puede pedir confirmación. Los archivos permanecen en Eliminado recientemente hasta 30 días; vacía ese álbum tú mismo para liberar espacio de inmediato.\n\nEMPIEZA GRATIS\nCada sesión incluye hasta 50 eliminaciones y 10 reducciones o conversiones estáticas. Conservar no tiene límite. Pruney Pro ofrece acciones ilimitadas con una compra única de por vida, sin suscripción.\n\nFunciona con acceso completo o limitado a Fotos. El análisis y los filtros de tamaño no descargan archivos solo disponibles en la nube. Los formatos no compatibles se excluyen de la revisión.",
+    "screens": [
+      [
+        [
+          "Conoce tu",
+          "fototeca"
+        ],
+        "Fotos, Live Photos y vídeos de un vistazo."
+      ],
+      [
+        [
+          "Desliza, elige",
+          "y haz sitio"
+        ],
+        "Conserva, borra o reduce el tamaño."
+      ],
+      [
+        [
+          "Céntrate en",
+          "lo que importa"
+        ],
+        "Filtra por tipo, fecha y tamaño."
+      ],
+      [
+        [
+          "Guarda el momento.",
+          "Reduce el tamaño."
+        ],
+        "Elige un nivel para cada archivo compatible."
+      ],
+      [
+        [
+          "Revisa primero.",
+          "Aplica después."
+        ],
+        "Una vista clara antes de empezar."
+      ]
+    ]
+  },
+  "pt-BR": {
+    "locale": "pt_BR",
+    "name": "Pruney: Limpeza de fotos",
+    "subtitle": "Guarde lembranças, abra espaço",
+    "promotional": "Abra espaço para novas lembranças. Revise fotos e vídeos deslizando, use filtros e reduza arquivos compatíveis. Ações ilimitadas com Pro vitalício.",
+    "keywords": "espaço,limpeza,galeria,organizar,comprimir,redimensionar,armazenamento,vídeos",
+    "description": "Abra espaço para os momentos que você quer guardar. O Pruney ajuda a revisar sua fototeca, escolher o que apagar e reduzir o tamanho de fotos e vídeos compatíveis.\n\nVEJA SUA FOTOTECA\nConfira o tamanho dos arquivos acessíveis de fotos, Live Photos e vídeos. As medições não representam o uso exato do armazenamento nem garantem o espaço que será liberado.\n\nREVISE DESLIZANDO\nDeslize para a esquerda para selecionar a exclusão, para a direita para manter ou para cima para redimensionar. Nas Live Photos, a ação para cima cria uma foto estática. Desfaça uma escolha ou aplique uma ação aos itens restantes. A revisão não altera os arquivos.\n\nFILTRE ANTES DE COMEÇAR\nEscolha tipo de mídia, data de criação e tamanho. Combine condições em um filtro ou adicione filtros alternativos.\n\nESCOLHA UM NÍVEL\nLeve, equilibrado, alto ou máximo para fotos e vídeos compatíveis. As fotos mantêm 90%, 80%, 70% ou 50% da largura e altura originais, não do tamanho do arquivo. Os vídeos usam uma resolução menor compatível. Os formatos de fotos compatíveis são preservados. Live Photos podem virar fotos comuns sem movimento.\n\nAPLIQUE QUANDO ESTIVER PRONTO\nConfira as escolhas antes de começar. O redimensionamento e a conversão estática salvam uma substituição e apagam o original. O app Fotos pode pedir confirmação. Os arquivos ficam em Apagados por até 30 dias; esvazie esse álbum para liberar espaço imediatamente.\n\nCOMECE GRÁTIS\nCada sessão inclui até 50 exclusões e 10 redimensionamentos ou conversões estáticas. Manter itens é ilimitado. O Pruney Pro é uma compra única vitalícia para ações ilimitadas, sem assinatura.\n\nFunciona com acesso completo ou limitado ao Fotos. A análise e os filtros de tamanho não baixam arquivos disponíveis apenas na nuvem. Mídias incompatíveis são excluídas da revisão.",
+    "screens": [
+      [
+        [
+          "Conheça sua",
+          "fototeca"
+        ],
+        "Fotos, Live Photos e vídeos em um só lugar."
+      ],
+      [
+        [
+          "Deslize, escolha",
+          "e abra espaço"
+        ],
+        "Mantenha, apague ou reduza o tamanho."
+      ],
+      [
+        [
+          "Foque no que",
+          "importa"
+        ],
+        "Filtre por tipo, data e tamanho."
+      ],
+      [
+        [
+          "Guarde o momento.",
+          "Reduza o tamanho."
+        ],
+        "Escolha um nível para cada arquivo compatível."
+      ],
+      [
+        [
+          "Revise primeiro.",
+          "Aplique depois."
+        ],
+        "Veja suas escolhas antes de começar."
+      ]
+    ]
+  },
+  "de": {
+    "locale": "de_DE",
+    "name": "Pruney: Fotos aufräumen",
+    "subtitle": "Erinnerungen statt Datenberge",
+    "promotional": "Platz für neue Erinnerungen: Fotos und Videos per Wischgeste prüfen, filtern und unterstützte Dateien verkleinern. Unbegrenzte Aktionen mit Lifetime Pro.",
+    "keywords": "speicher,aufräumen,galerie,ordnen,komprimieren,verkleinern,platz,wischen",
+    "description": "Schaffe Platz für die Momente, die du behalten möchtest. Pruney hilft dir, deine Fotomediathek zu prüfen, Dateien zum Löschen auszuwählen und unterstützte Fotos und Videos zu verkleinern.\n\nDEINE MEDIATHEK IM ÜBERBLICK\nSieh die Größe zugänglicher Dateien für Fotos, Live Photos und Videos. Die Messwerte zeigen weder den exakten Gerätespeicherverbrauch noch garantiert frei werdenden Speicher.\n\nMIT WISCHGESTEN PRÜFEN\nNach links: zum Löschen auswählen. Nach rechts: behalten. Nach oben: verkleinern oder Live Photos in statische Fotos umwandeln. Mache eine Auswahl rückgängig oder wende eine Aktion auf die verbleibenden Dateien an. Beim Prüfen werden keine Dateien verändert.\n\nVORHER FILTERN\nWähle Medientyp, Aufnahmedatum und Dateigröße. Verbinde Bedingungen in einem Filter oder füge alternative Filter hinzu.\n\nPASSENDE STUFE WÄHLEN\nLeicht, ausgewogen, hoch oder maximal für unterstützte Fotos und Videos. Fotos behalten 90, 80, 70 oder 50 Prozent ihrer ursprünglichen Breite und Höhe, nicht der Dateigröße. Videos verwenden eine kompatible kleinere Auflösung. Unterstützte Fotoformate bleiben erhalten. Live Photos lassen sich ohne Bewegung als normale Fotos speichern.\n\nDU BESTIMMST DEN START\nPrüfe die Auswahl vor dem Start. Beim Verkleinern und Umwandeln wird ein Ersatz gespeichert und das Original gelöscht. Fotos kann eine Bestätigung verlangen. Gelöschte Dateien bleiben bis zu 30 Tage in Zuletzt gelöscht. Leere dieses Album selbst, um sofort Speicher freizugeben.\n\nKOSTENLOS BEGINNEN\nPro Durchgang sind bis zu 50 Löschungen und 10 Verkleinerungen oder statische Umwandlungen enthalten. Behalten ist unbegrenzt. Pruney Pro ist ein optionaler einmaliger Kauf für lebenslang unbegrenzte Aktionen, ohne Abo.\n\nVoller und eingeschränkter Fotozugriff werden unterstützt. Analyse und Größenfilter laden keine reinen Cloud-Dateien herunter. Nicht unterstützte Medien werden von der Prüfung ausgeschlossen.",
+    "screens": [
+      [
+        [
+          "Deine Mediathek",
+          "im Überblick"
+        ],
+        "Fotos, Live Photos und Videos auf einen Blick."
+      ],
+      [
+        [
+          "Wischen. Wählen.",
+          "Platz schaffen."
+        ],
+        "Behalten, löschen oder verkleinern."
+      ],
+      [
+        [
+          "Prüfe, was",
+          "dir wichtig ist"
+        ],
+        "Filtere nach Typ, Datum und Dateigröße."
+      ],
+      [
+        [
+          "Moment behalten.",
+          "Datei verkleinern."
+        ],
+        "Wähle eine Stufe für jede unterstützte Datei."
+      ],
+      [
+        [
+          "Erst prüfen.",
+          "Dann anwenden."
+        ],
+        "Deine Auswahl vor dem Start im Überblick."
+      ]
+    ]
+  },
+  "fr": {
+    "locale": "fr_FR",
+    "name": "Pruney : Nettoyage photo",
+    "subtitle": "Des souvenirs, plus de place",
+    "promotional": "Faites place à de nouveaux souvenirs. Triez photos et vidéos par balayage, filtrez et réduisez les fichiers compatibles. Actions illimitées avec Pro à vie.",
+    "keywords": "stockage,nettoyage,galerie,trier,compresser,réduire,espace,balayer,médias",
+    "description": "Faites de la place pour les moments à conserver. Pruney vous aide à parcourir votre photothèque, choisir les fichiers à supprimer et réduire la taille des photos et vidéos compatibles.\n\nVOTRE PHOTOTHÈQUE EN UN COUP D’ŒIL\nConsultez la taille des fichiers accessibles pour les photos, Live Photos et vidéos. Ces mesures ne représentent pas l’espace exact utilisé sur l’appareil et ne garantissent pas l’espace libéré.\n\nTRIEZ PAR BALAYAGE\nBalayez à gauche pour sélectionner la suppression, à droite pour conserver ou vers le haut pour réduire. Pour les Live Photos, ce dernier geste crée une photo fixe. Annulez une sélection ou appliquez une action aux éléments restants. Le tri ne modifie pas vos fichiers.\n\nFILTREZ AVANT DE COMMENCER\nChoisissez le type, la date de création et la taille. Combinez des conditions dans un filtre ou ajoutez des filtres alternatifs.\n\nCHOISISSEZ UN NIVEAU\nLéger, équilibré, élevé ou maximal pour les photos et vidéos compatibles. Les photos gardent 90, 80, 70 ou 50 % de leur largeur et hauteur d’origine, pas de leur taille de fichier. Les vidéos utilisent une résolution inférieure compatible. Le format des photos compatibles est conservé. Les Live Photos peuvent devenir des photos ordinaires sans mouvement.\n\nAPPLIQUEZ QUAND VOUS ÊTES PRÊT\nVérifiez vos choix avant de commencer. La réduction et la conversion fixe enregistrent un remplacement puis suppriment l’original. Photos peut demander confirmation. Les fichiers restent dans Supprimés récemment jusqu’à 30 jours ; videz cet album vous-même pour libérer de l’espace immédiatement.\n\nCOMMENCEZ GRATUITEMENT\nChaque session inclut jusqu’à 50 suppressions et 10 réductions ou conversions fixes. Conserver est illimité. Pruney Pro est un achat unique à vie pour des actions illimitées, sans abonnement.\n\nL’accès complet ou limité à Photos est pris en charge. L’analyse et les filtres de taille ne téléchargent pas les fichiers uniquement dans le cloud. Les médias non compatibles sont exclus du tri.",
+    "screens": [
+      [
+        [
+          "Votre photothèque",
+          "en un coup d’œil"
+        ],
+        "Photos, Live Photos et vidéos au même endroit."
+      ],
+      [
+        [
+          "Balayez, choisissez",
+          "et faites place"
+        ],
+        "Conservez, supprimez ou réduisez."
+      ],
+      [
+        [
+          "Ciblez ce qui",
+          "compte"
+        ],
+        "Filtrez par type, date et taille de fichier."
+      ],
+      [
+        [
+          "Gardez l’instant.",
+          "Réduisez la taille."
+        ],
+        "Un niveau par fichier compatible."
+      ],
+      [
+        [
+          "Vérifiez d’abord.",
+          "Appliquez ensuite."
+        ],
+        "Un aperçu clair avant de commencer."
+      ]
+    ]
+  },
+  "it": {
+    "locale": "it_IT",
+    "name": "Pruney: Pulizia foto e video",
+    "subtitle": "Ricordi da tenere, più spazio",
+    "promotional": "Fai spazio a nuovi ricordi. Scorri foto e video, filtra e riduci i file compatibili. Sblocca azioni illimitate con un acquisto Pro a vita.",
+    "keywords": "spazio,pulizia,galleria,organizzare,comprimere,ridurre,archivio,scorrere",
+    "description": "Fai spazio ai momenti che vuoi conservare. Pruney ti aiuta a rivedere la libreria, scegliere cosa eliminare e ridurre le dimensioni di foto e video compatibili.\n\nLA LIBRERIA A COLPO D’OCCHIO\nVedi le dimensioni dei file accessibili di foto, Live Photos e video. Le misurazioni non indicano lo spazio esatto occupato sul dispositivo né garantiscono lo spazio liberato.\n\nRIVEDI SCORRENDO\nScorri a sinistra per selezionare l’eliminazione, a destra per tenere o verso l’alto per ridurre. Per le Live Photos, l’azione verso l’alto crea una foto statica. Annulla una scelta o applica un’azione agli elementi rimasti. La revisione non modifica i file.\n\nFILTRA PRIMA DI INIZIARE\nScegli tipo, data di creazione e dimensione. Combina condizioni in un filtro o aggiungi filtri alternativi.\n\nSCEGLI UN LIVELLO\nLeggero, bilanciato, alto o massimo per foto e video compatibili. Le foto mantengono il 90, 80, 70 o 50% della larghezza e altezza originali, non della dimensione del file. I video usano una risoluzione inferiore compatibile. I formati delle foto compatibili vengono conservati. Le Live Photos possono diventare foto normali senza movimento.\n\nAPPLICA QUANDO SEI PRONTO\nControlla la selezione prima di iniziare. La riduzione e la conversione statica salvano un sostituto e cancellano l’originale. Foto può richiedere conferma. I file rimangono in Eliminati di recente fino a 30 giorni; svuota l’album per liberare spazio subito.\n\nINIZIA GRATIS\nOgni sessione include fino a 50 eliminazioni e 10 riduzioni o conversioni statiche. Tenere elementi è illimitato. Pruney Pro è un acquisto unico a vita per azioni illimitate, senza abbonamento.\n\nFunziona con accesso completo o limitato a Foto. L’analisi e i filtri per dimensione non scaricano risorse disponibili solo nel cloud. I media non compatibili sono esclusi dalla revisione.",
+    "screens": [
+      [
+        [
+          "Conosci la tua",
+          "libreria"
+        ],
+        "Foto, Live Photos e video a colpo d’occhio."
+      ],
+      [
+        [
+          "Scorri, scegli",
+          "e fai spazio"
+        ],
+        "Tieni, elimina o riduci le dimensioni."
+      ],
+      [
+        [
+          "Concentrati su",
+          "ciò che conta"
+        ],
+        "Filtra per tipo, data e dimensione."
+      ],
+      [
+        [
+          "Conserva l’istante.",
+          "Riduci il file."
+        ],
+        "Scegli un livello per ogni file compatibile."
+      ],
+      [
+        [
+          "Prima controlla.",
+          "Poi applica."
+        ],
+        "Tutte le scelte prima di iniziare."
+      ]
+    ]
+  },
+  "ru": {
+    "locale": "ru_RU",
+    "name": "Pruney: Очистка фото и видео",
+    "subtitle": "Важные моменты. Больше места.",
+    "promotional": "Освободите место для новых воспоминаний. Просматривайте фото и видео свайпами, задавайте фильтры и уменьшайте файлы. Безлимитные действия с пожизненной Pro.",
+    "keywords": "очистка,галерея,сжатие,место,свайп,память",
+    "description": "Освободите место для моментов, которые хотите сохранить. Pruney помогает просмотреть медиатеку, выбрать файлы для удаления и уменьшить размер поддерживаемых фото и видео.\n\nМЕДИАТЕКА НА ОДНОМ ЭКРАНЕ\nПосмотрите объём доступных файлов фото, Live Photos и видео. Измерения не отражают точное использование памяти устройства и не гарантируют объём освобождённого места.\n\nПРОСМОТР СВАЙПАМИ\nСвайп влево выбирает удаление, вправо — сохранение, вверх — уменьшение размера. Для Live Photos свайп вверх создаёт обычное фото без движения. Отменяйте решения или применяйте действие ко всем оставшимся элементам. Во время просмотра файлы не меняются.\n\nФИЛЬТРЫ ПЕРЕД НАЧАЛОМ\nВыберите тип, дату создания и размер. Объедините условия в фильтре или добавьте альтернативные фильтры.\n\nВЫБОР УРОВНЯ\nЛёгкий, сбалансированный, высокий или максимальный уровень для поддерживаемых фото и видео. Фото сохраняют 90, 80, 70 или 50% исходной ширины и высоты, а не размера файла. Видео используют совместимое меньшее разрешение. Поддерживаемые форматы фото сохраняются. Live Photos можно превратить в обычные фотографии без движения.\n\nВЫ РЕШАЕТЕ, КОГДА НАЧАТЬ\nПроверьте выбранные действия перед запуском. Уменьшение размера и статичная конвертация сохраняют замену и удаляют оригинал. Система «Фото» может запросить подтверждение. Файлы остаются в «Недавно удалённые» до 30 дней. Очистите этот альбом самостоятельно, чтобы освободить место сразу.\n\nНАЧНИТЕ БЕСПЛАТНО\nВ каждом сеансе доступны до 50 удалений и 10 уменьшений размера или статичных конвертаций. Сохранение элементов не ограничено. Pruney Pro — необязательная разовая пожизненная покупка для безлимитных действий, без подписки.\n\nПоддерживается полный и ограниченный доступ к «Фото». Анализ и фильтры по размеру не скачивают файлы, доступные только в облаке. Неподдерживаемые типы исключаются из просмотра.",
+    "screens": [
+      [
+        [
+          "Ваша медиатека",
+          "как на ладони"
+        ],
+        "Фото, Live Photos и видео на одном экране."
+      ],
+      [
+        [
+          "Свайп. Решение.",
+          "Свободное место."
+        ],
+        "Сохраняйте, удаляйте или уменьшайте размер."
+      ],
+      [
+        [
+          "Выберите то,",
+          "что важно"
+        ],
+        "Фильтры по типу, дате и размеру файла."
+      ],
+      [
+        [
+          "Сохраните момент.",
+          "Уменьшите размер."
+        ],
+        "Выберите уровень для каждого файла."
+      ],
+      [
+        [
+          "Сначала проверьте.",
+          "Затем примените."
+        ],
+        "Все выбранные действия перед запуском."
+      ]
+    ]
+  },
+  "ja": {
+    "locale": "ja_JP",
+    "name": "Pruney：写真・動画を整理",
+    "subtitle": "思い出を残して、空き容量を増やそう",
+    "promotional": "新しい思い出のために空き容量を。スワイプで写真や動画を確認し、条件で絞り込み、対応ファイルを小さくできます。買い切りのProなら操作回数が無制限。",
+    "keywords": "容量整理,写真管理,動画圧縮,画像縮小,アルバム,スワイプ",
+    "description": "残したい瞬間のために、空き容量を増やしましょう。Pruneyは写真ライブラリを確認し、削除する項目を選び、対応する写真や動画のサイズを小さくするアプリです。\n\nライブラリをひと目で確認\n写真、Live Photos、動画のアクセス可能なファイルサイズを表示します。測定値は端末の正確な使用容量や、必ず空けられる容量を示すものではありません。\n\nスワイプで選択\n左にスワイプして削除を選択、右で保持、上でサイズを縮小。Live Photosは上にスワイプすると静止画に変換します。選択を取り消したり、残りの項目にまとめて操作を選べます。確認中にファイルは変更されません。\n\n開始前に絞り込み\nメディアの種類、作成日、ファイルサイズを指定できます。1つのフィルタで条件を組み合わせたり、別のフィルタを追加したりできます。\n\n縮小レベルを選ぶ\n対応する写真や動画には、軽め、バランス、高、最大の4段階があります。写真は元の幅と高さの90%、80%、70%、50%を保持します。ファイルサイズの割合ではありません。動画は対応する低い解像度を使用します。対応する写真形式を保持し、Live Photosは動きのない通常の写真にできます。\n\n確認してから実行\n開始前に選択内容を確認できます。縮小と静止画変換では置き換え用のファイルを保存し、元のファイルを削除します。「写真」が確認を求める場合があります。削除したファイルは「最近削除した項目」に最大30日間残ります。すぐに容量を空けるには、そのアルバムを自分で空にしてください。\n\n無料で始める\n1回につき最大50件の削除と10件の縮小または静止画変換が可能です。保持の回数は無制限です。Pruney Proは一度の購入で操作回数が無制限になる買い切りプランです。サブスクリプションはありません。\n\n写真へのフルアクセスと制限付きアクセスに対応しています。分析とサイズによる絞り込みは、クラウドにしかないファイルをダウンロードしません。未対応のメディアは確認対象から除外されます。",
+    "screens": [
+      [
+        [
+          "ライブラリを",
+          "ひと目で確認"
+        ],
+        "写真、Live Photos、動画をまとめて表示。"
+      ],
+      [
+        [
+          "スワイプで選んで",
+          "空き容量を増やす"
+        ],
+        "保持・削除・縮小を、自分のペースで。"
+      ],
+      [
+        [
+          "見たい項目を",
+          "絞り込もう"
+        ],
+        "種類・日付・ファイルサイズで選択。"
+      ],
+      [
+        [
+          "思い出はそのまま",
+          "サイズは小さく"
+        ],
+        "対応ファイルごとに縮小レベルを選択。"
+      ],
+      [
+        [
+          "まず確認。",
+          "準備ができたら実行。"
+        ],
+        "開始前に、選んだ操作をひと目で確認。"
+      ]
+    ]
+  },
+  "ko": {
+    "locale": "ko_KR",
+    "name": "Pruney: 사진과 동영상 정리",
+    "subtitle": "추억은 남기고 공간은 넓게",
+    "promotional": "새로운 추억을 위한 공간을 만드세요. 스와이프로 사진과 동영상을 확인하고, 필터로 골라 크기를 줄이세요. 평생 Pro 구매로 작업 횟수를 무제한으로 이용하세요.",
+    "keywords": "공간정리,사진관리,동영상압축,크기축소,갤러리,스와이프",
+    "description": "간직하고 싶은 순간을 위해 공간을 만드세요. Pruney는 사진 보관함을 확인하고, 삭제할 항목을 선택하고, 지원되는 사진과 동영상의 크기를 줄이는 앱입니다.\n\n보관함을 한눈에\n사진, Live Photos, 동영상의 접근 가능한 파일 크기를 보여줍니다. 측정값은 기기의 정확한 저장 공간 사용량이나 보장되는 확보 용량을 뜻하지 않습니다.\n\n스와이프로 선택\n왼쪽으로 밀어 삭제를 선택하고, 오른쪽으로 밀어 보관하고, 위로 밀어 크기를 줄이세요. Live Photos는 위로 밀면 정지 사진으로 변환됩니다. 선택을 되돌리거나 남은 항목에 작업을 한꺼번에 선택할 수 있습니다. 확인하는 동안 파일은 바뀌지 않습니다.\n\n시작 전에 필터 적용\n미디어 종류, 생성 날짜, 파일 크기를 선택하세요. 한 필터에 조건을 결합하거나 대체 필터를 추가할 수 있습니다.\n\n축소 수준 선택\n지원되는 사진과 동영상에는 약하게, 균형, 강하게, 최대의 네 단계가 있습니다. 사진은 원본 가로와 세로의 90%, 80%, 70%, 50%를 유지합니다. 파일 크기의 비율이 아닙니다. 동영상은 호환되는 낮은 해상도를 사용합니다. 지원되는 사진 형식을 유지하며, Live Photos는 움직임 없는 일반 사진으로 바꿀 수 있습니다.\n\n확인한 뒤 실행\n시작 전에 선택한 작업을 확인하세요. 크기 축소와 정지 사진 변환은 대체 파일을 저장하고 원본을 삭제합니다. 사진 앱에서 시스템 확인을 요청할 수 있습니다. 파일은 최근 삭제된 항목에 최대 30일 동안 남습니다. 즉시 공간을 확보하려면 해당 앨범을 직접 비워 주세요.\n\n무료로 시작\n한 세션에서 최대 50개 삭제와 10개 축소 또는 정지 사진 변환을 사용할 수 있습니다. 보관에는 제한이 없습니다. Pruney Pro는 한 번 구매해 평생 작업 횟수를 무제한으로 이용하는 선택 상품이며 구독이 아닙니다.\n\n사진에 대한 전체 접근 및 제한된 접근을 지원합니다. 분석과 크기 필터는 클라우드에만 있는 파일을 다운로드하지 않습니다. 지원되지 않는 미디어는 확인 대상에서 제외됩니다.",
+    "screens": [
+      [
+        [
+          "내 보관함을",
+          "한눈에"
+        ],
+        "사진, Live Photos, 동영상을 한곳에서."
+      ],
+      [
+        [
+          "밀고, 고르고,",
+          "공간을 넓히세요"
+        ],
+        "보관, 삭제, 크기 축소를 직접 선택하세요."
+      ],
+      [
+        [
+          "중요한 항목에",
+          "집중하세요"
+        ],
+        "종류, 날짜, 파일 크기로 필터링하세요."
+      ],
+      [
+        [
+          "추억은 그대로",
+          "크기는 작게"
+        ],
+        "지원 파일마다 축소 수준을 선택하세요."
+      ],
+      [
+        [
+          "먼저 확인하고",
+          "준비되면 실행"
+        ],
+        "시작 전에 선택한 작업을 한눈에."
+      ]
+    ]
+  },
+  "zh-Hans": {
+    "locale": "zh_CN",
+    "name": "Pruney：照片与视频清理",
+    "subtitle": "留住回忆，腾出空间",
+    "promotional": "为新回忆腾出空间。滑动查看照片与视频，按条件筛选，缩小支持的文件。一次购买终身Pro，即可无限次操作，无需订阅。",
+    "keywords": "空间清理,相册整理,视频压缩,图片缩小,存储管理,滑动筛选",
+    "description": "为值得留下的瞬间腾出空间。Pruney帮助你浏览照片图库，选择要删除的内容，并缩小支持的照片与视频。\n\n一览图库\n查看照片、实况照片和视频中可访问文件的大小。测量结果不代表设备实际占用的准确空间，也不保证可释放的空间。\n\n滑动选择\n向左滑动选择删除，向右保留，向上缩小。实况照片向上滑动后会转为静态照片。你可以撤销选择，也可以对剩余项目批量选择操作。浏览时不会更改文件。\n\n开始前先筛选\n选择媒体类型、创建日期和文件大小。在同一筛选条件组内组合条件，或添加其他筛选条件组。\n\n选择缩小等级\n支持的照片与视频可选择轻度、均衡、高度或最大。照片保留原始宽度与高度的90%、80%、70%或50%，并非文件大小的比例。视频使用兼容的较低分辨率。支持的照片格式会保留。实况照片可转为不带动态效果的普通照片。\n\n确认后再执行\n开始前查看已选操作。缩小和静态转换会先保存替代文件，再删除原件。“照片”可能要求系统确认。删除的文件会在“最近删除”中保留最多30天。如需立即释放空间，请自行清空该相簿。\n\n免费开始\n每次可删除最多50项，并缩小或静态转换最多10项。保留操作不限次数。Pruney Pro为可选的一次性终身购买，解锁无限次操作，无需订阅。\n\n支持完整或有限的照片访问权限。图库分析与文件大小筛选不会下载仅存于云端的资源。不支持的媒体不会进入浏览队列。",
+    "screens": [
+      [
+        [
+          "你的图库",
+          "一目了然"
+        ],
+        "照片、实况照片和视频，一屏掌握。"
+      ],
+      [
+        [
+          "滑动，选择",
+          "腾出更多空间"
+        ],
+        "保留、删除或缩小，由你决定。"
+      ],
+      [
+        [
+          "专注你想",
+          "整理的内容"
+        ],
+        "按类型、日期和文件大小筛选。"
+      ],
+      [
+        [
+          "留住精彩瞬间",
+          "缩小文件体积"
+        ],
+        "为每个支持的文件选择缩小等级。"
+      ],
+      [
+        [
+          "先查看",
+          "准备好再执行"
+        ],
+        "开始前，清楚了解所选操作。"
+      ]
+    ]
+  }
+}

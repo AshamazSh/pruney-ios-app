@@ -1,0 +1,34 @@
+Name
+Pruney: Limpieza de fotos
+
+Subtitle
+Guarda recuerdos, libera sitio
+
+Promotional Text
+Haz sitio para nuevos recuerdos. Revisa fotos y vídeos deslizando, filtra y reduce el tamaño de archivos compatibles. Acciones ilimitadas con Pro de por vida.
+
+Description
+Haz sitio para los momentos que quieres conservar. Pruney te ayuda a revisar tu fototeca, elegir qué borrar y reducir el tamaño de fotos y vídeos compatibles.
+
+TU FOTOTECA DE UN VISTAZO
+Consulta el tamaño de los archivos accesibles de fotos, Live Photos y vídeos. Las mediciones no indican el uso exacto del almacenamiento ni garantizan cuánto espacio liberarás.
+
+REVISA DESLIZANDO
+Desliza a la izquierda para elegir borrar, a la derecha para conservar o hacia arriba para reducir el tamaño. En las Live Photos, esta última acción las convierte en fotos estáticas. Deshaz decisiones o aplica una acción a los elementos restantes. Revisar no modifica tus archivos.
+
+FILTRA ANTES DE EMPEZAR
+Selecciona tipo, fecha de creación y tamaño. Combina condiciones en un filtro o añade filtros alternativos.
+
+ELIGE EL NIVEL
+Ligero, equilibrado, alto o máximo para fotos y vídeos compatibles. Las fotos conservan el 90, 80, 70 o 50 % de su ancho y alto, no de su tamaño de archivo. Los vídeos usan una resolución menor compatible. Se conserva el formato de las fotos compatibles. Las Live Photos pueden convertirse en fotos sin movimiento.
+
+APLICA CUANDO ESTÉS LISTO
+Comprueba tu selección antes de empezar. La reducción y la conversión estática guardan una copia y borran el original. Fotos puede pedir confirmación. Los archivos permanecen en Eliminado recientemente hasta 30 días; vacía ese álbum tú mismo para liberar espacio de inmediato.
+
+EMPIEZA GRATIS
+Cada sesión incluye hasta 50 eliminaciones y 10 reducciones o conversiones estáticas. Conservar no tiene límite. Pruney Pro ofrece acciones ilimitadas con una compra única de por vida, sin suscripción.
+
+Funciona con acceso completo o limitado a Fotos. El análisis y los filtros de tamaño no descargan archivos solo disponibles en la nube. Los formatos no compatibles se excluyen de la revisión.
+
+Keywords
+espacio,limpieza,galería,organizar,comprimir,reducir,almacenamiento,deslizar

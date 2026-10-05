@@ -1,0 +1,34 @@
+Name
+Pruney : Nettoyage photo
+
+Subtitle
+Des souvenirs, plus de place
+
+Promotional Text
+Faites place à de nouveaux souvenirs. Triez photos et vidéos par balayage, filtrez et réduisez les fichiers compatibles. Actions illimitées avec Pro à vie.
+
+Description
+Faites de la place pour les moments à conserver. Pruney vous aide à parcourir votre photothèque, choisir les fichiers à supprimer et réduire la taille des photos et vidéos compatibles.
+
+VOTRE PHOTOTHÈQUE EN UN COUP D’ŒIL
+Consultez la taille des fichiers accessibles pour les photos, Live Photos et vidéos. Ces mesures ne représentent pas l’espace exact utilisé sur l’appareil et ne garantissent pas l’espace libéré.
+
+TRIEZ PAR BALAYAGE
+Balayez à gauche pour sélectionner la suppression, à droite pour conserver ou vers le haut pour réduire. Pour les Live Photos, ce dernier geste crée une photo fixe. Annulez une sélection ou appliquez une action aux éléments restants. Le tri ne modifie pas vos fichiers.
+
+FILTREZ AVANT DE COMMENCER
+Choisissez le type, la date de création et la taille. Combinez des conditions dans un filtre ou ajoutez des filtres alternatifs.
+
+CHOISISSEZ UN NIVEAU
+Léger, équilibré, élevé ou maximal pour les photos et vidéos compatibles. Les photos gardent 90, 80, 70 ou 50 % de leur largeur et hauteur d’origine, pas de leur taille de fichier. Les vidéos utilisent une résolution inférieure compatible. Le format des photos compatibles est conservé. Les Live Photos peuvent devenir des photos ordinaires sans mouvement.
+
+APPLIQUEZ QUAND VOUS ÊTES PRÊT
+Vérifiez vos choix avant de commencer. La réduction et la conversion fixe enregistrent un remplacement puis suppriment l’original. Photos peut demander confirmation. Les fichiers restent dans Supprimés récemment jusqu’à 30 jours ; videz cet album vous-même pour libérer de l’espace immédiatement.
+
+COMMENCEZ GRATUITEMENT
+Chaque session inclut jusqu’à 50 suppressions et 10 réductions ou conversions fixes. Conserver est illimité. Pruney Pro est un achat unique à vie pour des actions illimitées, sans abonnement.
+
+L’accès complet ou limité à Photos est pris en charge. L’analyse et les filtres de taille ne téléchargent pas les fichiers uniquement dans le cloud. Les médias non compatibles sont exclus du tri.
+
+Keywords
+stockage,nettoyage,galerie,trier,compresser,réduire,espace,balayer,médias

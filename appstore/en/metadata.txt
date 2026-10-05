@@ -1,0 +1,34 @@
+Name
+Pruney: Photo & Video Cleaner
+
+Subtitle
+Keep memories. Clear the rest.
+
+Promotional Text
+Make room for new memories. Swipe through photos and videos, filter what matters, and resize supported files. Unlock unlimited actions with lifetime Pro.
+
+Description
+Make room for the moments you want to keep. Pruney helps you review your photo library, choose what to delete, and reduce the size of supported photos and videos.
+
+SEE YOUR LIBRARY
+View accessible file sizes for photos, Live Photos, and videos in one clear overview. These measurements are not exact device storage usage or guaranteed space savings.
+
+REVIEW WITH SWIPES
+Swipe left to select deletion, right to keep, or up to resize. For Live Photos, the upward action makes them static. Undo a decision or apply an action to the remaining items. Reviewing does not change your files.
+
+FILTER BEFORE YOU START
+Choose media type, creation date, and file size. Combine conditions in a filter, or add alternative filters to build the review you need.
+
+CHOOSE YOUR RESIZE LEVEL
+Pick Light, Balanced, High, or Maximum for supported photos and videos. Photo levels retain 90%, 80%, 70%, or 50% of the original width and height, not file size. Video levels use a compatible smaller resolution. Supported photo formats are preserved. Live Photos can become ordinary photos without the motion effect.
+
+YOU DECIDE WHEN TO APPLY
+Review your selection before starting. Resizing and static conversion save a replacement and delete the original. Photos may request system confirmation. Deleted files remain in Recently Deleted for up to 30 days; empty that album yourself to free space immediately.
+
+FREE TO START
+Each session includes up to 50 deletions and 10 resize or static conversions. Keeping items is unlimited. Pruney Pro is an optional one-time lifetime purchase for unlimited actions, with no subscription.
+
+Pruney works with the Photos access you grant, including limited access. Library analysis and file-size filtering do not download cloud-only resources. Unsupported media is excluded from review.
+
+Keywords
+storage,cleanup,gallery,organize,compress,resize,space,swipe,media,library
