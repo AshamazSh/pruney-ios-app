@@ -72,8 +72,18 @@ struct ReviewFiltersView: View {
             .padding(20)
             .background(.regularMaterial)
         }
-        .navigationDestination(isPresented: $showingAddFilter) {
-            NewReviewFilterView { filters.append($0) }
+        .sheet(isPresented: $showingAddFilter) {
+            NavigationStack {
+                NewReviewFilterView { filters.append($0) }
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") { showingAddFilter = false }
+                        }
+                    }
+            }
+            .tint(PruneyStyle.plum)
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
         }
         .navigationDestination(isPresented: $showingReview) {
             SwipeReviewView(filters: appliedFilters, onReturnToLibrary: onReturnToLibrary)

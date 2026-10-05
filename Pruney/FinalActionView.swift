@@ -5,7 +5,6 @@ struct FinalActionView: View {
     let onReturnToLibrary: (Bool) -> Void
     @Environment(\.scenePhase) private var scenePhase
     @State private var execution = ActionExecution()
-    @State private var showingConfirmation = false
 
     var body: some View {
         ScrollView {
@@ -28,13 +27,15 @@ struct FinalActionView: View {
         .navigationBarBackButtonHidden(execution.hasStarted)
         .safeAreaInset(edge: .bottom) {
             if !execution.isRunning {
-                Button(execution.isFinished ? "Back to library" : "Start") {
+                Button {
                     if execution.isFinished { onReturnToLibrary(execution.deletedCount > 0 || execution.resizedCount > 0 || execution.madeStaticCount > 0) }
-                    else { showingConfirmation = true }
+                    else { execution.start(plan) }
+                } label: {
+                    Text(execution.isFinished ? "Back to library" : "Start")
+                        .frame(maxWidth: .infinity)
                 }
                 .fontWeight(.semibold)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 10)
+                .controlSize(.large)
                 .buttonStyle(.borderedProminent)
                 .foregroundStyle(PruneyStyle.onAccent)
                 .disabled(!execution.isFinished && selectedTotal == 0)
@@ -42,12 +43,6 @@ struct FinalActionView: View {
                 .padding(20)
                 .background(.regularMaterial)
             }
-        }
-        .alert("Apply these actions?", isPresented: $showingConfirmation) {
-            Button("Cancel", role: .cancel) {}
-            Button("Start", role: .destructive) { execution.start(plan) }
-        } message: {
-            Text("Delete \(plan.selectedCount(for: .delete)) items, resize \(plan.selectedResizeCount) items, and make \(plan.selectedStaticCount) Live Photos static. Replacements remove their originals. Static photos keep the original still image and lose motion. Pruney cannot undo these changes. Photos may ask for additional confirmation.")
         }
         .onAppear { execution.isActive = scenePhase == .active }
         .onChange(of: scenePhase) { _, phase in execution.isActive = phase == .active }

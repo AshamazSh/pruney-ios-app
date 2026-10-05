@@ -23,7 +23,7 @@ With photo access, the overview shows two action tiles only after library analys
 ## Review filters
 
 - Filters appear as descriptive tiles with a trailing remove button. **OR** appears between tiles: an asset needs to match any one filter, and all enabled conditions inside that filter must match. An asset matching several filters enters the queue only once.
-- The bottom bar has a secondary **Add** button and a primary **Apply** button. Apply is disabled when the list is empty. Add pushes the New filter form; its primary Add button appends the filter and returns to the list. At least one condition must be enabled before adding.
+- The bottom bar has a secondary **Add** button and a primary **Apply** button. Apply is disabled when the list is empty. Add presents the New filter form as a bottom sheet with a drag indicator and Cancel button. Its primary Add button appends the filter and dismisses the sheet; cancelling or dismissing leaves the list unchanged. At least one condition must be enabled before adding.
 - Each condition has a left checkmark aligned vertically with its heading that enables or disables its controls. Controls sit directly below the heading row without an extra vertical gap; spacing between controls is retained. Menus use explicit leading-aligned labels without the standard menu picker's inset; the date picker and size controls also align to the heading's leading edge. Type is Photos, Live Photos, or Videos, with mutually exclusive categories. Date is From or To with a creation-date picker; both include the selected calendar day in the current time zone. Assets without a creation date cannot match a date condition.
 - Size is Less than or Greater than, with a slider from 1 MB to 1 GB in 1 MB steps (decimal units). Comparisons are strict. Disabled condition values remain in the form but are omitted from the added filter.
 - Apply snapshots the filters and pushes swipe review. Supported-type checks still run first. Type and date conditions use metadata; resource bytes are read only when a possible match requires a size condition. An asset matching a filter without a size condition needs no size read during preparation. Reads remain bounded and local, with no iCloud downloads. Live Photo size includes its readable still and motion resources using the same measurement policy as the overview.
@@ -62,13 +62,13 @@ With photo access, the overview shows two action tiles only after library analys
 - Each selected non-Live Photo or video resize tile has a bottom-right **Compression** menu with four levels: Light, Balanced, High, and Maximum. The tile shows the selected name; Maximum is the default, preserving the intent of the previous 50% setting. Deselected items retain their value, but their compression control is hidden until reselected. Levels retain 90%, 80%, 70%, or 50% of the photo dimensions respectively, with quality 95 for supported lossy formats; PNG uses lossless encoding after resizing. For videos, levels select a compatible standard export resolution at or below the target scale; multiple levels can produce the same resolution. These percentages describe dimensions, not guaranteed file size savings.
 - The settings navigation bar has an **Apply all** menu with the same four compression levels when regular photo or video candidates exist. It updates only those candidates, including deselected items. Live Photos have a fixed **Make static** label, no compression menu or level, and are ignored by Apply all. A Live-Photo-only selection has no Apply all menu.
 - Compression controls keep a consistent width within each tile, preserving their capsule corners when switching between shorter and longer level names.
-- **Continue** pushes the final action overview directly from the replacement settings, including when all resize checkmarks have been cleared. No originals are modified in settings.
+- **Continue** uses the same large, full-width primary button style as filter Apply and pushes the final action overview directly from the replacement settings, including when all resize checkmarks have been cleared. No originals are modified in settings.
 - Changes persist when returning from the final overview and when reopening settings from an unchanged completed review. Changing the swipe decisions or resetting the review creates a new plan the next time settings are opened.
 - The final overview shows selected counts for Delete, Resize, and Make static by media category, plus compression level counts for regular photos and videos only. Unchecked resize items are excluded; deletion choices can be changed using undo before entering settings. The Recently Deleted footnote has been moved to the main library screen.
 
 ## Applying actions
 
-- In sessions that enter replacement settings, **Start** on the final overview requires an in-app confirmation explaining that Pruney cannot undo the changes, resized files replace originals, and Live Photos lose motion. PhotoKit can show additional system confirmations. Starting is disabled when no items are selected.
+- In sessions that enter replacement settings, **Start** on the final overview immediately begins execution without an additional in-app confirmation. It uses the same large, full-width primary button style as filter Apply. PhotoKit retains its system confirmations. Starting is disabled when no items are selected.
 - The selected plan is snapshotted at Start, or at Delete X in the deletion-only path. The deletion batch runs first; replacement preparation starts only after successful deletion. A rejected or failed deletion stops the run and shows an issue rather than claiming success.
 - Resize candidates are processed sequentially. For unedited photos, the actual local photo resource is written to a temporary file, preserving access to animation frames and HDR data rather than requesting a rendered still. Edited photos use the current local editing input.
 - The original resource determines the output format. Any non-RAW image format in the current device’s Image I/O encoder list is eligible, including JPEG, HEIC, PNG, GIF, TIFF, BMP, and JPEG 2000 when supported. No third-party dependency is needed for this path. Lossy formats use quality 95 where supported. Unsupported formats and RAW/ProRAW are kept unchanged rather than converted to JPEG.
@@ -100,7 +100,7 @@ Pruney measures bytes delivered by PhotoKit for accessible local asset resources
 
 Network access is disabled for these requests, so the analysis does not download cloud-only resources. If a resource cannot be read, the asset is marked as incompletely measured; successfully measured resources still contribute to the total. The screen explains when the total is incomplete.
 
-These numbers represent accessible file sizes, not an exact measurement of physical disk usage or guaranteed recoverable space. They may differ from iPhone Settings. Onboarding, analysis, swipe review, and settings perform no photo library modifications. Only explicitly confirmed final actions modify the library.
+These numbers represent accessible file sizes, not an exact measurement of physical disk usage or guaranteed recoverable space. They may differ from iPhone Settings. Onboarding, analysis, swipe review, and settings perform no photo library modifications. Only actions started by the user from the final overview or Delete X modify the library, subject to Photos system confirmation.
 
 ## Planned review flow
 
@@ -133,7 +133,7 @@ Additional collection filters and handling of assets reviewed in previous sessio
 | `Pruney/SwipeReviewModel.swift` | Session queue, decisions, undo, preview requests, local measurement, and temporary sharing exports |
 | `Pruney/UndoHoldButton.swift` | Native undo button touch handling, 1.5-second hold recognition, and accessible reset action |
 | `Pruney/ReviewActionPlan.swift` | Draft action candidates, resize selections, per-item compression settings, and action groups |
-| `Pruney/FinalActionView.swift` | Final selected-action overview, confirmation, progress, and result UI |
+| `Pruney/FinalActionView.swift` | Final selected-action overview, direct Start execution, progress, and result UI |
 | `Pruney/ActionExecution.swift` | Sequential execution state, progress, foreground waiting, and issue reporting |
 | `Pruney/PhotoActionProcessor.swift` | Local photo/video encoding and confirmed PhotoKit deletion/replacement transactions |
 | `Pruney/ReviewActionSettingsView.swift` | Three-column resize grid, local thumbnails, selection and compression controls, and navigation to final review |

@@ -63,10 +63,11 @@ struct ReviewActionSettingsView: View {
             VStack(spacing: 12) {
                 Text("\(plan.selectedCount(for: .resize)) selected")
                     .font(.subheadline.weight(.medium)).monospacedDigit()
-                Button("Continue") { showingFinalReview = true }
+                Button { showingFinalReview = true } label: {
+                    Text("Continue").frame(maxWidth: .infinity)
+                }
                     .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
+                    .controlSize(.large)
                     .buttonStyle(.borderedProminent)
                     .foregroundStyle(PruneyStyle.onAccent)
                     .accessibilityIdentifier("resize.continueToDeletion")
