@@ -4,13 +4,13 @@ import Photos
 nonisolated enum FilterDateRule: String, CaseIterable, Identifiable, Sendable {
     case from, through
     var id: Self { self }
-    var title: String { self == .from ? "From" : "To" }
+    var title: String { self == .from ? String(localized: "From") : String(localized: "To") }
 }
 
 nonisolated enum FilterSizeRule: String, CaseIterable, Identifiable, Sendable {
     case less, greater
     var id: Self { self }
-    var title: String { self == .less ? "Less than" : "Greater than" }
+    var title: String { self == .less ? String(localized: "Less than") : String(localized: "Greater than") }
 }
 
 nonisolated struct ReviewFilter: Identifiable, Sendable {
@@ -26,16 +26,16 @@ nonisolated struct ReviewFilter: Identifiable, Sendable {
         if let category { parts.append(category.title) }
         if let date {
             let formatted = date.formatted(date: .abbreviated, time: .omitted)
-            parts.append(dateRule == .from ? "Created on or after \(formatted)" : "Created on or before \(formatted)")
+            parts.append(dateRule == .from ? String(localized: "Created on or after \(formatted)") : String(localized: "Created on or before \(formatted)"))
         }
         if let sizeMegabytes {
-            parts.append("\(sizeRule.title) \(Self.sizeLabel(sizeMegabytes))")
+            parts.append(String(localized: "\(sizeRule.title) \(Self.sizeLabel(sizeMegabytes))"))
         }
         return parts.joined(separator: " · ")
     }
 
     static func sizeLabel(_ megabytes: Int) -> String {
-        megabytes == 1_000 ? "1 GB" : "\(megabytes) MB"
+        megabytes == 1_000 ? String(localized: "1 GB") : String(localized: "\(megabytes) MB")
     }
 
     func matchesMetadata(_ asset: PHAsset) -> Bool {

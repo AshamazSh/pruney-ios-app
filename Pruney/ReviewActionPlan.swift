@@ -18,10 +18,10 @@ nonisolated enum CompressionLevel: String, CaseIterable, Identifiable {
     }
     var title: String {
         switch self {
-        case .light: "Light"
-        case .balanced: "Balanced"
-        case .high: "High"
-        case .maximum: "Maximum"
+        case .light: String(localized: "Light")
+        case .balanced: String(localized: "Balanced")
+        case .high: String(localized: "High")
+        case .maximum: String(localized: "Maximum")
         }
     }
 }

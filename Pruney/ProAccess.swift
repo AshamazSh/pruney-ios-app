@@ -6,7 +6,7 @@ nonisolated enum FreeAllowance: String, Identifiable {
     case deletions, replacements
     var id: Self { self }
     var limit: Int { self == .deletions ? 50 : 10 }
-    var title: String { self == .deletions ? "deletions" : "resize or Make static actions" }
+    var title: String { self == .deletions ? String(localized: "deletions") : String(localized: "resize or Make static actions") }
 }
 
 @MainActor @Observable
@@ -63,7 +63,7 @@ final class ProAccess {
         defer { isLoading = false }
         do {
             product = try await Product.products(for: [Self.productID]).first { $0.type == .nonConsumable }
-            if product == nil { message = "The lifetime purchase is currently unavailable. Please try again later." }
+            if product == nil { message = String(localized: "The lifetime purchase is currently unavailable. Please try again later.") }
         } catch { message = error.localizedDescription }
     }
 
@@ -79,18 +79,18 @@ final class ProAccess {
                       transaction.productID == Self.productID,
                       transaction.productType == .nonConsumable,
                       transaction.revocationDate == nil else {
-                    message = "This purchase could not be verified. Please try restoring purchases."
+                    message = String(localized: "This purchase could not be verified. Please try restoring purchases.")
                     return
                 }
                 entitlementGeneration = UUID()
                 isPro = true
                 await transaction.finish()
             case .pending:
-                message = "Your purchase is pending approval. Your current item has not been selected."
+                message = String(localized: "Your purchase is pending approval. Your current item has not been selected.")
             case .userCancelled:
                 break
             @unknown default:
-                message = "The purchase did not complete. Please try again."
+                message = String(localized: "The purchase did not complete. Please try again.")
             }
         } catch { message = error.localizedDescription }
     }
@@ -103,7 +103,7 @@ final class ProAccess {
         do {
             try await AppStore.sync()
             await refreshEntitlement()
-            if !isPro { message = "No lifetime purchase was found for this Apple Account." }
+            if !isPro { message = String(localized: "No lifetime purchase was found for this Apple Account.") }
         } catch { message = error.localizedDescription }
     }
 

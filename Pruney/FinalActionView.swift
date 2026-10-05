@@ -22,7 +22,7 @@ struct FinalActionView: View {
             .frame(maxWidth: .infinity)
         }
         .background(Color(uiColor: .systemGroupedBackground))
-        .navigationTitle(execution.isFinished ? "Results" : (execution.hasStarted ? "Applying actions" : "Review actions"))
+        .navigationTitle(execution.isFinished ? String(localized: "Results") : (execution.hasStarted ? String(localized: "Applying actions") : String(localized: "Review actions")))
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(execution.hasStarted)
         .safeAreaInset(edge: .bottom) {
@@ -31,7 +31,7 @@ struct FinalActionView: View {
                     if execution.isFinished { onReturnToLibrary(execution.deletedCount > 0 || execution.resizedCount > 0 || execution.madeStaticCount > 0) }
                     else { execution.start(plan) }
                 } label: {
-                    Text(execution.isFinished ? "Back to library" : "Start")
+                    Text(execution.isFinished ? String(localized: "Back to library") : String(localized: "Start"))
                         .frame(maxWidth: .infinity)
                 }
                 .fontWeight(.semibold)
@@ -54,20 +54,20 @@ struct FinalActionView: View {
 
     private var overview: some View {
         VStack(alignment: .leading, spacing: 24) {
-            Text("Ready to make room?").font(.title2.bold())
-            Text("\(selectedTotal) items selected").foregroundStyle(.secondary)
-            summaryCard(stage: .delete, title: "Delete", symbol: "trash", color: ReviewDecision.deleted.color)
+            Text(String(localized: "Ready to make room?")).font(.title2.bold())
+            Text(String(localized: "\(selectedTotal) items selected")).foregroundStyle(.secondary)
+            summaryCard(stage: .delete, title: String(localized: "Delete"), symbol: "trash", color: ReviewDecision.deleted.color)
             if plan.selectedResizeCount > 0 {
-                summaryCard(stage: .resize, title: "Resize", symbol: "arrow.down.right.and.arrow.up.left", color: ReviewDecision.resized.color, staticOnly: false)
+                summaryCard(stage: .resize, title: String(localized: "Resize"), symbol: "arrow.down.right.and.arrow.up.left", color: ReviewDecision.resized.color, staticOnly: false)
             }
             if plan.selectedStaticCount > 0 {
-                summaryCard(stage: .resize, title: "Make static", symbol: "livephoto.slash", color: ReviewDecision.resized.color, staticOnly: true)
+                summaryCard(stage: .resize, title: String(localized: "Make static"), symbol: "livephoto.slash", color: ReviewDecision.resized.color, staticOnly: true)
             }
             if selectedTotal == 0 {
-                Text("Go back and select items to apply actions.").foregroundStyle(.secondary)
+                Text(String(localized: "Go back and select items to apply actions.")).foregroundStyle(.secondary)
             }
             if plan.selectedCount(for: .resize) > 0 {
-                Text("Replacements remove the originals. Live Photos keep their original still image without resizing or motion.")
+                Text(String(localized: "Replacements remove the originals. Live Photos keep their original still image without resizing or motion."))
                     .font(.footnote).foregroundStyle(.secondary)
             }
         }
@@ -114,10 +114,10 @@ struct FinalActionView: View {
             Text(execution.status).font(.title3.bold()).multilineTextAlignment(.center)
             ProgressView(value: execution.progress)
                 .accessibilityIdentifier("actions.progress")
-            Text(execution.isSavingReplacements ? "Waiting for Photos to save replacements…" : "\(execution.processed) of \(execution.total) processed")
+            Text(execution.isSavingReplacements ? String(localized: "Waiting for Photos to save replacements…") : String(localized: "\(execution.processed) of \(execution.total) processed"))
                 .monospacedDigit().multilineTextAlignment(.center)
-            Text("Keep Pruney open until this finishes.").font(.headline)
-            Text("Deleting first, then preparing replacements. Some changes may already be applied.")
+            Text(String(localized: "Keep Pruney open until this finishes.")).font(.headline)
+            Text(String(localized: "Deleting first, then preparing replacements. Some changes may already be applied."))
                 .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
         }
         .padding(.vertical, 48)
@@ -128,9 +128,9 @@ struct FinalActionView: View {
             Image(systemName: execution.issues.isEmpty ? "checkmark.circle.fill" : "exclamationmark.circle.fill")
                 .font(.system(size: 64))
                 .foregroundStyle(execution.issues.isEmpty ? ReviewDecision.skipped.color : Color.orange)
-            Text(execution.issues.isEmpty ? "All done!" : "Finished with issues")
+            Text(execution.issues.isEmpty ? String(localized: "All done!") : String(localized: "Finished with issues"))
                 .font(.title.bold())
-            Text("\(execution.deletedCount) deleted · \(execution.resizedCount) resized · \(execution.madeStaticCount) made static")
+            Text(String(localized: "\(execution.deletedCount) deleted · \(execution.resizedCount) resized · \(execution.madeStaticCount) made static"))
                 .font(.headline).monospacedDigit()
             ForEach(execution.issues) { issue in
                 VStack(alignment: .leading, spacing: 8) {

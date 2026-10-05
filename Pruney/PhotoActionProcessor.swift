@@ -8,11 +8,11 @@ nonisolated enum PhotoActionError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .unavailable: "The current original is not available locally."
-        case .unsupported: "This item cannot be processed in this format."
-        case .unsupportedPhotoFormat: "This photo format cannot be preserved. The original was kept."
-        case .noSavings: "Compression would not produce a smaller file. The original was kept."
-        case .writeFailed: "Photos could not save the changes."
+        case .unavailable: String(localized: "The current original is not available locally.")
+        case .unsupported: String(localized: "This item cannot be processed in this format.")
+        case .unsupportedPhotoFormat: String(localized: "This photo format cannot be preserved. The original was kept.")
+        case .noSavings: String(localized: "Compression would not produce a smaller file. The original was kept.")
+        case .writeFailed: String(localized: "Photos could not save the changes.")
         }
     }
 }

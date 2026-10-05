@@ -14,8 +14,8 @@ struct UndoHoldButton: UIViewRepresentable {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "arrow.uturn.backward", withConfiguration: UIImage.SymbolConfiguration(pointSize: 18, weight: .medium)), for: .normal)
         button.tintColor = .secondaryLabel
-        button.accessibilityLabel = "Undo last decision"
-        button.accessibilityHint = "Hold for 1.5 seconds to reset all selections"
+        button.accessibilityLabel = String(localized: "Undo last decision")
+        button.accessibilityHint = String(localized: "Hold for 1.5 seconds to reset all selections")
         button.accessibilityIdentifier = "review.undo"
         button.addTarget(context.coordinator, action: #selector(Coordinator.pressed), for: .touchDown)
         button.addTarget(context.coordinator, action: #selector(Coordinator.tapped), for: .touchUpInside)
@@ -29,7 +29,7 @@ struct UndoHoldButton: UIViewRepresentable {
         hold.delaysTouchesEnded = false
         button.addGestureRecognizer(hold)
         button.accessibilityCustomActions = [
-            UIAccessibilityCustomAction(name: "Reset all selections", target: context.coordinator, selector: #selector(Coordinator.accessibilityReset))
+            UIAccessibilityCustomAction(name: String(localized: "Reset all selections"), target: context.coordinator, selector: #selector(Coordinator.accessibilityReset))
         ]
         return button
     }

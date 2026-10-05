@@ -4,8 +4,9 @@ These instructions apply to the repository. Read `README.md` for the implemented
 
 ## Product scope
 
-- Pruney helps users free photo and video storage. Its interface defaults to English, including onboarding, permission explanations, accessibility labels, and the Photos usage description.
+- Pruney helps users free photo and video storage. English is the source and fallback language. The interface follows the device's supported language preference, with English, Spanish, Brazilian Portuguese, German, French, Japanese, Korean, Simplified Chinese, Italian, and Russian localizations in Localizable.xcstrings and InfoPlist.xcstrings, including onboarding, permission explanations, accessibility labels, and the Photos usage description.
 - Write all new project text in English, including interface copy, accessibility labels, permission descriptions, documentation, and code comments. Create or update translations only when the user gives a separate, explicit instruction to translate; do not automatically add translations while implementing a feature.
+- Use String(localized:) for UI-facing String values created outside SwiftUI literal lookup, including model labels, interpolated descriptions, errors, and UIKit accessibility actions. Keep format placeholder types consistent in the catalogs. Keep accessibility identifiers independent of translated text. Purchase metadata and prices come from StoreKit; do not replace them with app-catalog translations or hardcoded prices.
 - Implement the requested feature incrementally. Do not treat proposed review or compression behavior as finalized requirements.
 - Keep documentation aligned with the code. Label planned features clearly and record material behavior changes in `README.md`.
 

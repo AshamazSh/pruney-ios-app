@@ -31,13 +31,13 @@ struct ReviewVideoCard<DragSurface: ViewModifier>: View {
                         .frame(width: 44, height: 44)
                 }
                 .disabled(!playback.isReady)
-                .accessibilityLabel(playback.isPlaying ? "Pause video" : "Play video")
+                .accessibilityLabel(playback.isPlaying ? String(localized: "Pause video") : String(localized: "Play video"))
                 .accessibilityIdentifier("review.video.playPause")
                 VStack(spacing: 0) {
                     Slider(value: Binding(get: { playback.position }, set: { playback.position = $0 }),
                            in: 0...max(playback.duration, 1), onEditingChanged: playback.setScrubbing)
                         .disabled(playback.duration <= 0 || !playback.isReady)
-                        .accessibilityLabel("Video position")
+                        .accessibilityLabel(String(localized: "Video position"))
                         .accessibilityValue(timeLabel(playback.position))
                         .accessibilityIdentifier("review.video.timeline")
                     HStack {
@@ -51,7 +51,7 @@ struct ReviewVideoCard<DragSurface: ViewModifier>: View {
                     Image(systemName: playback.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
                         .frame(width: 44, height: 44)
                 }
-                .accessibilityLabel(playback.isMuted ? "Unmute video" : "Mute video")
+                .accessibilityLabel(playback.isMuted ? String(localized: "Unmute video") : String(localized: "Mute video"))
                 .accessibilityIdentifier("review.video.mute")
             }
             .buttonStyle(.plain)
@@ -213,7 +213,7 @@ private final class ReviewVideoPlayback {
         isPlaying = player.timeControlStatus != .paused
         isMuted = player.isMuted
         isReady = player.currentItem?.status == .readyToPlay
-        errorMessage = player.currentItem?.status == .failed ? "This video could not be played." : nil
+        errorMessage = player.currentItem?.status == .failed ? String(localized: "This video could not be played.") : nil
     }
 
     isolated deinit {

@@ -8,9 +8,9 @@ nonisolated enum ReviewDecision: CaseIterable {
 
     var title: String {
         switch self {
-        case .skipped: "Kept"
-        case .resized: "Resized"
-        case .deleted: "Delete"
+        case .skipped: String(localized: "Kept")
+        case .resized: String(localized: "Resized")
+        case .deleted: String(localized: "Delete")
         }
     }
     var symbol: String {
@@ -31,7 +31,7 @@ struct ReviewShare: Identifiable {
 nonisolated enum ReviewSortOrder: String, CaseIterable, Identifiable {
     case date, size
     var id: Self { self }
-    var title: String { self == .date ? "By date" : "By size" }
+    var title: String { self == .date ? String(localized: "By date") : String(localized: "By size") }
 }
 
 private struct ReviewSelection {
@@ -341,7 +341,7 @@ final class SwipeReviewModel {
                     guard let self, self.generation == token else { return }
                     self.isLoading = false
                     if let item { self.player = AVPlayer(playerItem: item) }
-                    else { self.mediaError = "This video isn’t available on this device. It may be stored in iCloud." }
+                    else { self.mediaError = String(localized: "This video isn’t available on this device. It may be stored in iCloud.") }
                 }
             }
             requests.append(id)
@@ -357,7 +357,7 @@ final class SwipeReviewModel {
                     if let image { self.image = image }
                     if !degraded {
                         self.isLoading = false
-                        if image == nil { self.mediaError = "This photo isn’t available on this device. It may be stored in iCloud." }
+                        if image == nil { self.mediaError = String(localized: "This photo isn’t available on this device. It may be stored in iCloud.") }
                     }
                 }
             }
@@ -420,7 +420,7 @@ final class SwipeReviewModel {
                 guard let self, self.generation == token else { return }
                 self.isPreparingShare = false
                 if !(error is CancellationError) {
-                    self.shareError = "The original file couldn’t be prepared for sharing. It may only be available in iCloud."
+                    self.shareError = String(localized: "The original file couldn’t be prepared for sharing. It may only be available in iCloud.")
                 }
             }
         }

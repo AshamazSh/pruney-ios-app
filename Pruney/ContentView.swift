@@ -47,23 +47,23 @@ struct ContentView: View {
         ScrollView {
             VStack(spacing: 28) {
                 Spacer(minLength: 48)
-                Image(systemName: "leaf.fill")
-                    .font(.system(size: 64))
-                    .foregroundStyle(PruneyStyle.plum)
+                Image("PruneyMark")
+                    .resizable()
+                    .scaledToFit()
                     .frame(width: 140, height: 140)
-                    .background(PruneyStyle.plum.opacity(0.09), in: RoundedRectangle(cornerRadius: 44))
+                    .accessibilityHidden(true)
                 VStack(spacing: 16) {
-                    Text("Welcome to Pruney")
+                    Text(String(localized: "Welcome to Pruney"))
                         .font(.largeTitle.bold())
                         .multilineTextAlignment(.center)
-                    Text("Make room for more")
+                    Text(String(localized: "Make room for more"))
                         .font(.title3.weight(.medium))
-                    Text("Let’s start with your photo library. Pruney shows how much space your photos, Live Photos, and videos take up, so you can start clearing room.")
+                    Text(String(localized: "Let’s start with your photo library. Pruney shows how much space your photos, Live Photos, and videos take up, so you can start clearing room."))
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                         .lineSpacing(4)
                 }
-                Label("You decide what to keep", systemImage: "checkmark.shield")
+                Label(String(localized: "You decide what to keep"), systemImage: "checkmark.shield")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 Spacer(minLength: 40)
@@ -77,7 +77,7 @@ struct ContentView: View {
                 } label: {
                     HStack {
                         if requestingAccess { ProgressView().tint(PruneyStyle.onAccent) }
-                        Text("Continue").fontWeight(.semibold)
+                        Text(String(localized: "Continue")).fontWeight(.semibold)
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 12)
                 }
@@ -85,7 +85,7 @@ struct ContentView: View {
                 .foregroundStyle(PruneyStyle.onAccent)
                 .disabled(requestingAccess)
                 .accessibilityIdentifier("onboarding.continue")
-                Text("Next, allow access to your photo library.")
+                Text(String(localized: "Next, allow access to your photo library."))
                     .font(.footnote).foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
@@ -101,13 +101,13 @@ struct ContentView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Your library").font(.largeTitle.bold())
-                        Text("See what’s taking up space")
+                        Text(String(localized: "Your library")).font(.largeTitle.bold())
+                        Text(String(localized: "See what’s taking up space"))
                             .foregroundStyle(.secondary)
                     }
                     if analysis.canRead {
                         if analysis.authorization == .limited {
-                            notice(title: "Access to selected photos", message: "These totals include only the photos and videos you’ve shared. Allow full access in Settings to analyze your entire library.", symbol: "photo.badge.checkmark") {
+                            notice(title: String(localized: "Access to selected photos"), message: String(localized: "These totals include only the photos and videos you’ve shared. Allow full access in Settings to analyze your entire library."), symbol: "photo.badge.checkmark") {
                                 settingsButton
                             }
                         }
@@ -116,14 +116,14 @@ struct ContentView: View {
                             VStack(alignment: .leading, spacing: 10) {
                                 HStack {
                                     ProgressView()
-                                    Text("Analyzing your library…").font(.subheadline.weight(.medium))
+                                    Text(String(localized: "Analyzing your library…")).font(.subheadline.weight(.medium))
                                 }
                                 ProgressView(value: analysis.summary.progress)
-                                Text("Processed \(analysis.summary.processed) of \(analysis.summary.assetCount)")
+                                Text(String(localized: "Processed \(analysis.summary.processed) of \(analysis.summary.assetCount)"))
                                     .font(.caption).foregroundStyle(.secondary)
                             }
                         } else if analysis.hasAnalyzed && analysis.summary.assetCount == 0 {
-                            notice(title: "Your library is empty", message: analysis.authorization == .limited ? "There are no photos or videos in the shared part of your library. Update access in Settings or add new files." : "Your library has no photos or videos yet. Pruney will update the totals when you add some.", symbol: "photo.on.rectangle") { EmptyView() }
+                            notice(title: String(localized: "Your library is empty"), message: analysis.authorization == .limited ? String(localized: "There are no photos or videos in the shared part of your library. Update access in Settings or add new files.") : String(localized: "Your library has no photos or videos yet. Pruney will update the totals when you add some."), symbol: "photo.on.rectangle") { EmptyView() }
                         }
                         if analysis.hasAnalyzed && !analysis.isAnalyzing {
                             reviewOptions
@@ -156,7 +156,7 @@ struct ContentView: View {
             .toolbar {
                 if analysis.canRead {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button("Refresh totals", systemImage: "arrow.clockwise") {
+                        Button(String(localized: "Refresh totals"), systemImage: "arrow.clockwise") {
                             analysis.analyze()
                         }
                         .labelStyle(.iconOnly)
@@ -165,10 +165,10 @@ struct ContentView: View {
                     }
                 }
             }
-            .alert("Recently Deleted", isPresented: $showingRecentlyDeletedNotice) {
-                Button("OK", role: .cancel) {}
+            .alert(String(localized: "Recently Deleted"), isPresented: $showingRecentlyDeletedNotice) {
+                Button(String(localized: "OK"), role: .cancel) {}
             } message: {
-                Text("Deleted files remain in Recently Deleted for up to 30 days. To free up space now, open Photos and empty Recently Deleted yourself.")
+                Text(String(localized: "Deleted files remain in Recently Deleted for up to 30 days. To free up space now, open Photos and empty Recently Deleted yourself."))
             }
             .onAppear {
                 if pendingRecentlyDeletedNotice {
@@ -182,10 +182,10 @@ struct ContentView: View {
     private var reviewOptions: some View {
         VStack(spacing: 12) {
             ReviewOptionTile(
-                title: "Start swiping",
+                title: String(localized: "Start swiping"),
                 description: analysis.authorization == .limited
-                    ? "Review supported photos and videos you’ve shared with Pruney, one swipe at a time."
-                    : "Review supported photos and videos in your library, one swipe at a time.",
+                    ? String(localized: "Review supported photos and videos you’ve shared with Pruney, one swipe at a time.")
+                    : String(localized: "Review supported photos and videos in your library, one swipe at a time."),
                 symbol: "rectangle.stack",
                 isPrimary: true,
                 action: { showingSwipeReview = true }
@@ -193,8 +193,8 @@ struct ContentView: View {
             .accessibilityIdentifier("library.startSwiping")
 
             ReviewOptionTile(
-                title: "Set up filters",
-                description: "Choose which photos and videos to review before you start swiping.",
+                title: String(localized: "Set up filters"),
+                description: String(localized: "Choose which photos and videos to review before you start swiping."),
                 symbol: "slider.horizontal.3",
                 isPrimary: false,
                 action: { showingFilters = true }
@@ -207,7 +207,7 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 24) {
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 6) {
-                    Text(analysis.isAnalyzing ? "Measured so far" : "Accessible file size")
+                    Text(analysis.isAnalyzing ? String(localized: "Measured so far") : String(localized: "Accessible file size"))
                         .font(.subheadline).foregroundStyle(.secondary)
                     Image(systemName: "info.circle")
                         .font(.subheadline)
@@ -223,7 +223,7 @@ struct ContentView: View {
                             }
                             .buttonStyle(.plain)
                             .foregroundStyle(PruneyStyle.plum)
-                            .accessibilityLabel("How we calculate size")
+                            .accessibilityLabel(String(localized: "How we calculate size"))
                             .accessibilityIdentifier("library.sizeInformation")
                             .popover(isPresented: $showingSizeInformation) {
                                 sizeInformation
@@ -234,12 +234,12 @@ struct ContentView: View {
                 Text(formattedBytes(analysis.summary.totalBytes))
                     .font(.system(.largeTitle, design: .rounded).bold())
                     .contentTransition(.numericText())
-                Text("\(analysis.summary.assetCount) photos and videos")
+                Text(String(localized: "\(analysis.summary.assetCount) photos and videos"))
                     .font(.footnote).foregroundStyle(.secondary)
             }
             StorageBar(summary: analysis.summary)
             if analysis.summary.unavailableCount > 0 {
-                Text("Some items couldn’t be fully measured. Tap ⓘ for details.")
+                Text(String(localized: "Some items couldn’t be fully measured. Tap ⓘ for details."))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -253,7 +253,7 @@ struct ContentView: View {
                             .background(category.color.opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
                         VStack(alignment: .leading, spacing: 3) {
                             Text(category.title).font(.subheadline.weight(.medium))
-                            Text("\(usage.count) items").font(.caption).foregroundStyle(.secondary)
+                            Text(String(localized: "\(usage.count) items")).font(.caption).foregroundStyle(.secondary)
                         }
                         Spacer()
                         Text(formattedBytes(usage.bytes))
@@ -269,17 +269,17 @@ struct ContentView: View {
     private var sizeInformation: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(alignment: .firstTextBaseline) {
-                Text("How we calculate size")
+                Text(String(localized: "How we calculate size"))
                     .font(.headline)
                 Spacer(minLength: 8)
-                Button("Done") { showingSizeInformation = false }
+                Button(String(localized: "Done")) { showingSizeInformation = false }
                     .font(.subheadline.weight(.semibold))
             }
-            Text("We measure accessible local files, including the photo and motion in Live Photos. This may differ from the storage shown in iPhone Settings. Files in iCloud aren’t downloaded.")
+            Text(String(localized: "We measure accessible local files, including the photo and motion in Live Photos. This may differ from the storage shown in iPhone Settings. Files in iCloud aren’t downloaded."))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             if analysis.summary.unavailableCount > 0 {
-                Text("Couldn’t fully measure \(analysis.summary.unavailableCount) items. They may be stored in iCloud. The total size is incomplete.")
+                Text(String(localized: "Couldn’t fully measure \(analysis.summary.unavailableCount) items. They may be stored in iCloud. The total size is incomplete."))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -291,9 +291,9 @@ struct ContentView: View {
     }
 
     private var accessError: some View {
-        notice(title: "Photo access needed", message: accessExplanation, symbol: "photo.badge.exclamationmark") {
+        notice(title: String(localized: "Photo access needed"), message: accessExplanation, symbol: "photo.badge.exclamationmark") {
             if analysis.authorization == .notDetermined {
-                Button("Allow access") { Task { await analysis.requestAccess() } }
+                Button(String(localized: "Allow access")) { Task { await analysis.requestAccess() } }
                     .buttonStyle(.borderedProminent)
                     .foregroundStyle(PruneyStyle.onAccent)
             } else if analysis.authorization != .restricted {
@@ -305,13 +305,13 @@ struct ContentView: View {
 
     private var accessExplanation: String {
         if analysis.authorization == .restricted {
-            return "Photo access is restricted by the system. Check your Screen Time restrictions or contact your device administrator."
+            return String(localized: "Photo access is restricted by the system. Check your Screen Time restrictions or contact your device administrator.")
         }
-        return "Pruney needs photo access to show the size of your photos and videos. Open Settings → Photos and allow full access or select specific photos."
+        return String(localized: "Pruney needs photo access to show the size of your photos and videos. Open Settings → Photos and allow full access or select specific photos.")
     }
 
     private var settingsButton: some View {
-        Button("Open Settings", systemImage: "gearshape") {
+        Button(String(localized: "Open Settings"), systemImage: "gearshape") {
             if let url = URL(string: UIApplication.openSettingsURLString) {
                 UIApplication.shared.open(url)
             }
@@ -392,8 +392,8 @@ private struct StorageBar: View {
         }
         .frame(height: 20)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Storage breakdown for photos, Live Photos, and videos")
-        .accessibilityValue(MediaCategory.allCases.map { "\($0.title): \(formattedBytes(summary.usage[$0]?.bytes ?? 0))" }.joined(separator: ", "))
+        .accessibilityLabel(String(localized: "Storage breakdown for photos, Live Photos, and videos"))
+        .accessibilityValue(MediaCategory.allCases.map { String(localized: "\($0.title): \(formattedBytes(summary.usage[$0]?.bytes ?? 0))") }.joined(separator: ", "))
     }
 }
 

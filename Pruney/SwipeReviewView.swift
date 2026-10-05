@@ -48,12 +48,12 @@ struct SwipeReviewView: View {
         VStack(spacing: 20) {
             counters
             if !review.hasAccess {
-                ContentUnavailableView("Photo access needed", systemImage: "photo.badge.exclamationmark", description: Text("Return to your library to update Photos access."))
+                ContentUnavailableView(String(localized: "Photo access needed"), systemImage: "photo.badge.exclamationmark", description: Text(String(localized: "Return to your library to update Photos access.")))
             } else if review.isPreparingReview {
                 VStack(spacing: 16) {
-                    ProgressView(review.isFiltered ? "Preparing filtered review…" : "Checking formats…")
+                    ProgressView(review.isFiltered ? String(localized: "Preparing filtered review…") : String(localized: "Checking formats…"))
                     ProgressView(value: Double(review.preparationProcessed), total: Double(max(1, review.preparationTotal)))
-                    Text("\(review.preparationProcessed) of \(review.preparationTotal) checked")
+                    Text(String(localized: "\(review.preparationProcessed) of \(review.preparationTotal) checked"))
                         .font(.caption).monospacedDigit().foregroundStyle(.secondary)
                 }
                 .frame(maxHeight: .infinity)
@@ -64,7 +64,7 @@ struct SwipeReviewView: View {
                 media
                 metadata
             } else {
-                ContentUnavailableView(review.isFiltered ? "No matching items" : review.excludedFormatCount > 0 ? "No supported items" : "Your library is empty", systemImage: "photo.on.rectangle", description: Text(review.isFiltered ? "No supported local items match your filters. Go back to adjust the conditions." : review.excludedFormatCount > 0 ? "The available items use formats Pruney cannot process on this device. Your originals are unchanged." : "There are no photos or videos available to review."))
+                ContentUnavailableView(review.isFiltered ? String(localized: "No matching items") : review.excludedFormatCount > 0 ? String(localized: "No supported items") : String(localized: "Your library is empty"), systemImage: "photo.on.rectangle", description: Text(review.isFiltered ? String(localized: "No supported local items match your filters. Go back to adjust the conditions.") : review.excludedFormatCount > 0 ? String(localized: "The available items use formats Pruney cannot process on this device. Your originals are unchanged.") : String(localized: "There are no photos or videos available to review.")))
             }
         }
         .padding(.horizontal, 20)
@@ -74,7 +74,7 @@ struct SwipeReviewView: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if !directDeletion.isRunning { actions }
         }
-        .navigationTitle("Swipe your library")
+        .navigationTitle(String(localized: "Swipe your library"))
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(directDeletion.isRunning)
         .background {
@@ -90,7 +90,7 @@ struct SwipeReviewView: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Choose for all remaining items", systemImage: "forward") {
+                Button(String(localized: "Choose for all remaining items"), systemImage: "forward") {
                     review.pause()
                     showingBulkActions = true
                 }
@@ -99,13 +99,13 @@ struct SwipeReviewView: View {
                 .accessibilityIdentifier("review.bulkActions")
             }
         }
-        .confirmationDialog("Choose an action for all \(review.remaining) remaining items", isPresented: $showingBulkActions, titleVisibility: .visible) {
-            Button("Keep all") { selectAll(.skipped) }
-            Button("Resize / Make static") { selectAll(.resized) }
-            Button("Delete all", role: .destructive) { selectAll(.deleted) }
-            Button("Cancel", role: .cancel) {}
+        .confirmationDialog(String(localized: "Choose an action for all \(review.remaining) remaining items"), isPresented: $showingBulkActions, titleVisibility: .visible) {
+            Button(String(localized: "Keep all")) { selectAll(.skipped) }
+            Button(String(localized: "Resize / Make static")) { selectAll(.resized) }
+            Button(String(localized: "Delete all"), role: .destructive) { selectAll(.deleted) }
+            Button(String(localized: "Cancel"), role: .cancel) {}
         } message: {
-            Text("This only selects actions. Final changes happen later.")
+            Text(String(localized: "This only selects actions. Final changes happen later."))
         }
         .onAppear { review.start() }
         .onChange(of: holdingUndo) { _, holding in
@@ -140,8 +140,8 @@ struct SwipeReviewView: View {
                 deletionError = directDeletion.issues.map(\.message).joined(separator: "\n")
             }
         }
-        .alert("Deletion did not complete", isPresented: Binding(get: { deletionError != nil }, set: { if !$0 { deletionError = nil } })) {
-            Button("OK", role: .cancel) { deletionError = nil }
+        .alert(String(localized: "Deletion did not complete"), isPresented: Binding(get: { deletionError != nil }, set: { if !$0 { deletionError = nil } })) {
+            Button(String(localized: "OK"), role: .cancel) { deletionError = nil }
         } message: {
             Text(deletionError ?? "")
         }
@@ -156,19 +156,19 @@ struct SwipeReviewView: View {
                                 if upgradeToken == token && offeredAllowance != nil { upgradeConfirmed = true }
                             })
         }
-        .alert("Unable to share", isPresented: Binding(get: { review.shareError != nil }, set: { if !$0 { review.shareError = nil } })) {
-            Button("OK", role: .cancel) { review.shareError = nil }
+        .alert(String(localized: "Unable to share"), isPresented: Binding(get: { review.shareError != nil }, set: { if !$0 { review.shareError = nil } })) {
+            Button(String(localized: "OK"), role: .cancel) { review.shareError = nil }
         } message: {
             Text(review.shareError ?? "")
         }
-        .alert("Reset all selections?", isPresented: $showingResetConfirmation) {
-            Button("Cancel", role: .cancel) {}
-            Button("Reset", role: .destructive) {
+        .alert(String(localized: "Reset all selections?"), isPresented: $showingResetConfirmation) {
+            Button(String(localized: "Cancel"), role: .cancel) {}
+            Button(String(localized: "Reset"), role: .destructive) {
                 drag = .zero
                 review.resetSelections()
             }
         } message: {
-            Text("Clear your choices and start again from the beginning? Your photos and videos won’t be changed.")
+            Text(String(localized: "Clear your choices and start again from the beginning? Your photos and videos won’t be changed."))
         }
     }
 
@@ -179,11 +179,11 @@ struct SwipeReviewView: View {
                     .font(.subheadline.weight(.semibold))
                     .monospacedDigit()
                     .foregroundStyle(decision.color)
-                    .accessibilityLabel("\(decision == .resized ? "Resize or make static" : decision.title): \(review.count(decision))")
+                    .accessibilityLabel(String(localized: "\(decision == .resized ? String(localized: "Resize or make static") : decision.title): \(review.count(decision))"))
             }
             Spacer(minLength: 8)
             Menu {
-                Picker("Sort remaining items", selection: Binding(
+                Picker(String(localized: "Sort remaining items"), selection: Binding(
                     get: { review.isSorting ? ReviewSortOrder.size : review.sortOrder },
                     set: { order in
                         drag = .zero
@@ -201,8 +201,8 @@ struct SwipeReviewView: View {
                     .contentShape(Rectangle())
             }
             .disabled(!review.canSort || isAnimatingDecision)
-            .accessibilityLabel("Sort remaining items")
-            .accessibilityValue(review.isSorting ? "Sorting by size" : review.sortOrder.title)
+            .accessibilityLabel(String(localized: "Sort remaining items"))
+            .accessibilityValue(review.isSorting ? String(localized: "Sorting by size") : review.sortOrder.title)
             .accessibilityIdentifier("review.sort")
         }
         .accessibilityIdentifier("review.counters")
@@ -228,7 +228,7 @@ struct SwipeReviewView: View {
                     }
                     .overlay(alignment: decisionBadgeAlignment) {
                         if let decision = outgoingDecision ?? dragDecision {
-                            Label(decision == .resized && review.isLivePhoto ? "Make static" : decision.title,
+                            Label(decision == .resized && review.isLivePhoto ? String(localized: "Make static") : decision.title,
                                   systemImage: decision == .resized && review.isLivePhoto ? "livephoto.slash" : decision.symbol)
                                 .font(.subheadline.bold())
                                 .padding(12)
@@ -252,10 +252,10 @@ struct SwipeReviewView: View {
             if review.isSorting {
                 VStack(spacing: 12) {
                     ProgressView()
-                    Text("Measuring sizes…").font(.subheadline.weight(.semibold))
+                    Text(String(localized: "Measuring sizes…")).font(.subheadline.weight(.semibold))
                     Text("\(review.sortingProcessed)/\(review.sortingTotal)")
                         .font(.caption).monospacedDigit()
-                    Button("Cancel") { review.cancelSort() }
+                    Button(String(localized: "Cancel")) { review.cancelSort() }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 24))
@@ -277,13 +277,13 @@ struct SwipeReviewView: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
-                    .accessibilityLabel(review.isVideo ? "Current video preview" : review.isLivePhoto ? "Current Live Photo" : "Current photo")
+                    .accessibilityLabel(review.isVideo ? String(localized: "Current video preview") : review.isLivePhoto ? String(localized: "Current Live Photo") : String(localized: "Current photo"))
             } else if review.isLoading {
-                ProgressView("Loading…")
+                ProgressView(String(localized: "Loading…"))
             } else {
                 VStack(spacing: 12) {
                     Image(systemName: "icloud.slash").font(.largeTitle)
-                    Text(review.mediaError ?? "This item is unavailable.")
+                    Text(review.mediaError ?? String(localized: "This item is unavailable."))
                         .font(.subheadline)
                         .multilineTextAlignment(.center)
                 }
@@ -304,7 +304,7 @@ struct SwipeReviewView: View {
             } else if review.isLoadingNextImage {
                 ProgressView()
             } else {
-                Label("Preview unavailable", systemImage: "icloud.slash")
+                Label(String(localized: "Preview unavailable"), systemImage: "icloud.slash")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -326,14 +326,14 @@ struct SwipeReviewView: View {
     }
 
     private var liveBadge: some View {
-        Label("LIVE", systemImage: "livephoto")
+        Label(String(localized: "LIVE"), systemImage: "livephoto")
             .font(.caption.weight(.semibold))
             .padding(.horizontal, 10)
             .padding(.vertical, 7)
             .foregroundStyle(.white)
             .background(.black.opacity(0.55), in: Capsule())
             .padding(14)
-            .accessibilityLabel("Live Photo")
+            .accessibilityLabel(String(localized: "Live Photo"))
     }
 
     private var revealProgress: CGFloat {
@@ -362,20 +362,20 @@ struct SwipeReviewView: View {
                     if let date = review.currentAsset?.creationDate {
                         Text(date, format: .dateTime.month(.abbreviated).day().year())
                     } else {
-                        Text("Date unavailable")
+                        Text(String(localized: "Date unavailable"))
                     }
                     Text("·")
                     Text(sizeText)
                 }
                 Spacer(minLength: 8)
-                Text("\(review.remaining) left")
+                Text(String(localized: "\(review.remaining) left"))
                     .monospacedDigit()
                     .fixedSize()
-                    .accessibilityLabel("\(review.remaining) of \(review.total) items remaining")
+                    .accessibilityLabel(String(localized: "\(review.remaining) of \(review.total) items remaining"))
                     .accessibilityIdentifier("review.remaining")
             }
             if let measurement = review.measurement, !measurement.isComplete {
-                Text("Some resources aren’t available locally")
+                Text(String(localized: "Some resources aren’t available locally"))
             }
         }
         .font(.caption)
@@ -385,13 +385,13 @@ struct SwipeReviewView: View {
     }
 
     private var sizeText: String {
-        guard let measurement = review.measurement else { return "Measuring size…" }
-        if measurement.bytes == 0 && !measurement.isComplete { return "Size unavailable" }
+        guard let measurement = review.measurement else { return String(localized: "Measuring size…") }
+        if measurement.bytes == 0 && !measurement.isComplete { return String(localized: "Size unavailable") }
         let formatter = ByteCountFormatter()
         formatter.countStyle = .file
         formatter.allowsNonnumericFormatting = false
         let size = formatter.string(fromByteCount: measurement.bytes)
-        return measurement.isComplete ? size : "\(size) (partial)"
+        return measurement.isComplete ? size : String(localized: "\(size) (partial)")
     }
 
     private var actions: some View {
@@ -416,28 +416,24 @@ struct SwipeReviewView: View {
                 }
                 .foregroundStyle(.secondary)
                 .disabled(!review.canShare || isAnimatingDecision)
-                .accessibilityLabel("Share current item")
+                .accessibilityLabel(String(localized: "Share current item"))
                 .accessibilityIdentifier("review.share")
             }
             .buttonStyle(.plain)
-            Text("No changes applied yet.")
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
             if !ProAccess.shared.isPro {
-                Text("This run: \(max(0, FreeAllowance.deletions.limit - review.count(.deleted))) deletes · \(max(0, FreeAllowance.replacements.limit - review.count(.resized))) conversions left")
+                Text(String(localized: "This run: \(max(0, FreeAllowance.deletions.limit - review.count(.deleted))) deletes · \(max(0, FreeAllowance.replacements.limit - review.count(.resized))) conversions left"))
                     .font(.caption2).foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .accessibilityIdentifier("review.freeAllowance")
             }
             if review.excludedFormatCount > 0 {
-                Text("\(review.excludedFormatCount) unsupported items excluded")
+                Text(String(localized: "\(review.excludedFormatCount) unsupported items excluded"))
                     .font(.caption2).foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .accessibilityIdentifier("review.excludedFormats")
             }
             if review.sizeUnavailableFilterCount > 0 {
-                Text("\(review.sizeUnavailableFilterCount) items excluded: size unavailable")
+                Text(String(localized: "\(review.sizeUnavailableFilterCount) items excluded: size unavailable"))
                     .font(.caption2).foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .accessibilityIdentifier("review.unavailableFilterSizes")
@@ -494,7 +490,7 @@ struct SwipeReviewView: View {
         }
         .disabled(!review.canDecide || isAnimatingDecision)
         .opacity(review.canDecide ? 1 : 0.4)
-        .accessibilityLabel(decision == .skipped ? "Keep current item" : decision == .resized ? (review.isLivePhoto ? "Make current Live Photo static" : "Mark current item for resizing") : "Mark current item for deletion")
+        .accessibilityLabel(decision == .skipped ? String(localized: "Keep current item") : decision == .resized ? (review.isLivePhoto ? String(localized: "Make current Live Photo static") : String(localized: "Mark current item for resizing")) : String(localized: "Mark current item for deletion"))
         .accessibilityIdentifier("review.\(decision)")
     }
 
@@ -577,16 +573,16 @@ struct SwipeReviewView: View {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 64))
                 .foregroundStyle(ReviewDecision.skipped.color)
-            Text("All reviewed").font(.title.bold())
-            Text(review.count(.resized) > 0 ? "Review your selected changes next. Your originals are unchanged." : "Your choices are ready. Your originals are unchanged.")
+            Text(String(localized: "All reviewed")).font(.title.bold())
+            Text(review.count(.resized) > 0 ? String(localized: "Review your selected changes next. Your originals are unchanged.") : String(localized: "Your choices are ready. Your originals are unchanged."))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
             if directDeletion.isRunning {
-                ProgressView("Deleting items…")
-                Text("Keep Pruney open until this finishes.")
+                ProgressView(String(localized: "Deleting items…"))
+                Text(String(localized: "Keep Pruney open until this finishes."))
                     .font(.footnote).foregroundStyle(.secondary)
             } else if review.count(.resized) > 0 {
-                Button("Continue") {
+                Button(String(localized: "Continue")) {
                     if actionPlanRevision != review.selectionRevision {
                         actionPlan = review.makeActionPlan()
                         actionPlanRevision = review.selectionRevision
@@ -597,7 +593,7 @@ struct SwipeReviewView: View {
                 .foregroundStyle(PruneyStyle.onAccent)
                 .accessibilityIdentifier("review.continueToActions")
             } else if review.count(.deleted) > 0 {
-                Button("Delete \(review.count(.deleted))", role: .destructive) {
+                Button(String(localized: "Delete \(review.count(.deleted))"), role: .destructive) {
                     directDeletion = ActionExecution()
                     directDeletion.isActive = scenePhase == .active
                     directDeletion.start(review.makeActionPlan())
@@ -606,7 +602,7 @@ struct SwipeReviewView: View {
                 .tint(ReviewDecision.deleted.color)
                 .accessibilityIdentifier("review.deleteSelected")
             } else {
-                Button("Back to library") { onReturnToLibrary(false) }
+                Button(String(localized: "Back to library")) { onReturnToLibrary(false) }
                     .buttonStyle(.borderedProminent)
                     .foregroundStyle(PruneyStyle.onAccent)
                     .accessibilityIdentifier("review.backToLibrary")

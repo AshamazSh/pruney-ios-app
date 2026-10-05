@@ -20,7 +20,7 @@ final class ActionExecution {
     private(set) var total = 0
     private(set) var itemProgress = 0.0
     private(set) var isSavingReplacements = false
-    private(set) var status = "Preparing…"
+    private(set) var status = String(localized: "Preparing…")
     private(set) var issues: [ActionExecutionIssue] = []
     var isActive = true
     private let processor = PhotoActionProcessor()
@@ -42,7 +42,7 @@ final class ActionExecution {
         guard access.permits(deletions: deletes.count, replacements: resizes.count) else {
             hasStarted = true
             isFinished = true
-            issues.append(ActionExecutionIssue(title: "Free allowance exceeded", message: "Your selection exceeds the free per-run limit. Return to review and reduce your choices or unlock Pruney Pro. No actions were applied."))
+            issues.append(ActionExecutionIssue(title: String(localized: "Free allowance exceeded"), message: String(localized: "Your selection exceeds the free per-run limit. Return to review and reduce your choices or unlock Pruney Pro. No actions were applied.")))
             return
         }
         hasStarted = true
@@ -61,18 +61,18 @@ final class ActionExecution {
             }
             let authorization = PHPhotoLibrary.authorizationStatus(for: .readWrite)
             guard authorization == .authorized || authorization == .limited else {
-                issues.append(ActionExecutionIssue(title: "Photo access needed", message: "Allow Photos access in Settings, then start a new review."))
+                issues.append(ActionExecutionIssue(title: String(localized: "Photo access needed"), message: String(localized: "Allow Photos access in Settings, then start a new review.")))
                 return
             }
             if !deletes.isEmpty {
                 await waitForForeground()
-                status = "Deleting \(deletes.count) items…"
+                status = String(localized: "Deleting \(deletes.count) items…")
                 do {
                     try await processor.delete(deletes)
                     deletedCount = deletes.count
                     processed = deletes.count
                 } catch {
-                    issues.append(ActionExecutionIssue(title: "Deletion did not complete", message: resizes.isEmpty ? error.localizedDescription : "Replacement actions were not started. \(error.localizedDescription)"))
+                    issues.append(ActionExecutionIssue(title: String(localized: "Deletion did not complete"), message: resizes.isEmpty ? error.localizedDescription : String(localized: "Replacement actions were not started. \(error.localizedDescription)")))
                     return
                 }
             }
@@ -80,7 +80,7 @@ final class ActionExecution {
             var preparedStaticCount = 0
             for (index, item) in resizes.enumerated() {
                 await waitForForeground()
-                status = item.makesStatic ? "Making Live Photo static — \(index + 1) of \(resizes.count)…" : "Resizing item \(index + 1) of \(resizes.count)…"
+                status = item.makesStatic ? String(localized: "Making Live Photo static — \(index + 1) of \(resizes.count)…") : String(localized: "Resizing item \(index + 1) of \(resizes.count)…")
                 itemProgress = 0
                 let completedBeforeItem = processed
                 do {
@@ -91,7 +91,7 @@ final class ActionExecution {
                     preparedCount += 1
                     if item.makesStatic { preparedStaticCount += 1 }
                 } catch {
-                    issues.append(ActionExecutionIssue(title: "\(item.makesStatic ? "Make static" : "Resize") item \(index + 1) — \(item.category.title)", message: error.localizedDescription))
+                    issues.append(ActionExecutionIssue(title: String(localized: "\(item.makesStatic ? String(localized: "Make static") : String(localized: "Resize")) item \(index + 1) — \(item.category.title)"), message: error.localizedDescription))
                 }
                 processed += 1
                 itemProgress = 0
@@ -99,13 +99,13 @@ final class ActionExecution {
             if preparedCount > 0 {
                 await waitForForeground()
                 isSavingReplacements = true
-                status = "Saving \(preparedCount) replacements…"
+                status = String(localized: "Saving \(preparedCount) replacements…")
                 do {
                     let committedCount = try await processor.commitPreparedResizes()
                     madeStaticCount = preparedStaticCount
                     resizedCount = committedCount - preparedStaticCount
                 } catch {
-                    issues.append(ActionExecutionIssue(title: "Replacements were not saved", message: "No replacement originals were removed. Any earlier deletions remain applied. \(error.localizedDescription)"))
+                    issues.append(ActionExecutionIssue(title: String(localized: "Replacements were not saved"), message: String(localized: "No replacement originals were removed. Any earlier deletions remain applied. \(error.localizedDescription)")))
                 }
             }
             await processor.discardPreparedResizes()
@@ -114,7 +114,7 @@ final class ActionExecution {
 
     private func waitForForeground() async {
         while !isActive {
-            status = "Waiting for the app to return…"
+            status = String(localized: "Waiting for the app to return…")
             try? await Task.sleep(for: .milliseconds(250))
         }
     }

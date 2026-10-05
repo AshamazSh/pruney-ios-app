@@ -10,11 +10,11 @@ struct ReviewActionSettingsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                Text("Choose items to resize or make static. Live Photos keep their original still image without motion.")
+                Text(String(localized: "Choose items to resize or make static. Live Photos keep their original still image without motion."))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 if plan.resizeItems.isEmpty {
-                    ContentUnavailableView("No items selected", systemImage: "photo.on.rectangle", description: Text("No items were marked for resizing."))
+                    ContentUnavailableView(String(localized: "No items selected"), systemImage: "photo.on.rectangle", description: Text(String(localized: "No items were marked for resizing.")))
                 }
                 ForEach(MediaCategory.allCases) { category in
                     let items = plan.resizeItems.filter { $0.category == category }
@@ -27,7 +27,7 @@ struct ReviewActionSettingsView: View {
                                     .font(.subheadline).monospacedDigit().foregroundStyle(.secondary)
                             }
                             if category == .livePhoto {
-                                Text("Make static — keep the still image at its original resolution.")
+                                Text(String(localized: "Make static — keep the still image at its original resolution."))
                                     .font(.caption).foregroundStyle(.secondary)
                             }
                             LazyVGrid(columns: columns, spacing: 10) {
@@ -44,36 +44,33 @@ struct ReviewActionSettingsView: View {
             .frame(maxWidth: .infinity)
         }
         .background(Color(uiColor: .systemGroupedBackground))
-        .navigationTitle("Resize & make static")
+        .navigationTitle(String(localized: "Resize & make static"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             if plan.resizeItems.contains(where: { !$0.makesStatic }) {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Menu("Apply all") {
+                    Menu(String(localized: "Apply all")) {
                         ForEach(CompressionLevel.allCases) { level in
                             Button(level.title) { plan.setCompressionForAll(level) }
                         }
                     }
-                    .accessibilityLabel("Apply compression to all photos and videos")
+                    .accessibilityLabel(String(localized: "Apply compression to all photos and videos"))
                     .accessibilityIdentifier("resize.applyAll")
                 }
             }
         }
         .safeAreaInset(edge: .bottom) {
             VStack(spacing: 12) {
-                Text("\(plan.selectedCount(for: .resize)) selected")
+                Text(String(localized: "\(plan.selectedCount(for: .resize)) selected"))
                     .font(.subheadline.weight(.medium)).monospacedDigit()
                 Button { showingFinalReview = true } label: {
-                    Text("Continue").frame(maxWidth: .infinity)
+                    Text(String(localized: "Continue")).frame(maxWidth: .infinity)
                 }
                     .fontWeight(.semibold)
                     .controlSize(.large)
                     .buttonStyle(.borderedProminent)
                     .foregroundStyle(PruneyStyle.onAccent)
                     .accessibilityIdentifier("resize.continueToDeletion")
-                Text("No changes applied yet.")
-                    .font(.caption).foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
             }
             .padding(20)
             .frame(maxWidth: 700)
@@ -100,9 +97,9 @@ struct ReviewActionSettingsView: View {
                     .opacity(item.isSelected ? 1 : 0.35)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("\(item.category.title) item")
-            .accessibilityValue(item.isSelected ? "Selected" : "Not selected")
-            .accessibilityHint("Double tap to change selection")
+            .accessibilityLabel(String(localized: "\(item.category.title) item"))
+            .accessibilityValue(item.isSelected ? String(localized: "Selected") : String(localized: "Not selected"))
+            .accessibilityHint(String(localized: "Double tap to change selection"))
             .accessibilityIdentifier("actions.item.\(item.id)")
         }
         .overlay(alignment: .topTrailing) {
@@ -116,11 +113,11 @@ struct ReviewActionSettingsView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(item.isSelected ? "Deselect item" : "Select item")
+            .accessibilityLabel(item.isSelected ? String(localized: "Deselect item") : String(localized: "Select item"))
         }
         .overlay(alignment: .bottomTrailing) {
             if item.isSelected && item.makesStatic {
-                Text("Make static")
+                Text(String(localized: "Make static"))
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.black)
                     .padding(.horizontal, 9).padding(.vertical, 6)
@@ -130,7 +127,7 @@ struct ReviewActionSettingsView: View {
                     .allowsHitTesting(false)
             } else if item.isSelected {
                 Menu {
-                    Picker("Compression", selection: Binding(
+                    Picker(String(localized: "Compression"), selection: Binding(
                         get: { item.compressionLevel },
                         set: { plan.setCompression($0, id: item.id) }
                     )) {
@@ -154,7 +151,7 @@ struct ReviewActionSettingsView: View {
                 .buttonStyle(.plain)
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 8)
-                .accessibilityLabel("Compression")
+                .accessibilityLabel(String(localized: "Compression"))
                 .accessibilityValue(item.compressionLevel.title)
             }
         }

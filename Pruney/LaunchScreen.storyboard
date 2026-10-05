@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="launch-controller">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <scene sceneID="launch-scene">
+            <objects>
+                <viewController id="launch-controller" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="launch-view">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="brand-group">
+                                <rect key="frame" x="76.5" y="300" width="240" height="252"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="PruneyMark" translatesAutoresizingMaskIntoConstraints="NO" id="brand-mark">
+                                        <rect key="frame" x="20" y="0.0" width="200" height="200"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="mark-width"/>
+                                            <constraint firstAttribute="height" constant="200" id="mark-height"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Pruney" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="brand-name">
+                                        <rect key="frame" x="0.0" y="200" width="240" height="52"/>
+                                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="40"/>
+                                        <color key="textColor" name="LaunchForeground"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="group-width"/>
+                                    <constraint firstAttribute="height" constant="252" id="group-height"/>
+                                    <constraint firstItem="brand-mark" firstAttribute="top" secondItem="brand-group" secondAttribute="top" id="mark-top"/>
+                                    <constraint firstItem="brand-mark" firstAttribute="centerX" secondItem="brand-group" secondAttribute="centerX" id="mark-center"/>
+                                    <constraint firstItem="brand-name" firstAttribute="top" secondItem="brand-mark" secondAttribute="bottom" id="name-top"/>
+                                    <constraint firstItem="brand-name" firstAttribute="leading" secondItem="brand-group" secondAttribute="leading" id="name-leading"/>
+                                    <constraint firstAttribute="trailing" secondItem="brand-name" secondAttribute="trailing" id="name-trailing"/>
+                                    <constraint firstAttribute="bottom" secondItem="brand-name" secondAttribute="bottom" id="name-bottom"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="launch-safe-area"/>
+                        <color key="backgroundColor" name="LaunchBackground"/>
+                        <constraints>
+                            <constraint firstItem="brand-group" firstAttribute="centerX" secondItem="launch-view" secondAttribute="centerX" id="group-center-x"/>
+                            <constraint firstItem="brand-group" firstAttribute="centerY" secondItem="launch-view" secondAttribute="centerY" id="group-center-y"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="launch-first-responder" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="PruneyMark" width="1254" height="1254"/>
+        <namedColor name="LaunchBackground">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="LaunchForeground">
+            <color red="0.2549" green="0.1255" blue="0.3725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

@@ -11,15 +11,15 @@ struct ReviewFiltersView: View {
         ScrollView {
             VStack(spacing: 12) {
                 if filters.isEmpty {
-                    ContentUnavailableView("No filters yet", systemImage: "line.3.horizontal.decrease",
-                                           description: Text("Add a filter to choose what to review."))
+                    ContentUnavailableView(String(localized: "No filters yet"), systemImage: "line.3.horizontal.decrease",
+                                           description: Text(String(localized: "Add a filter to choose what to review.")))
                 } else {
-                    Text("Match all conditions in a tile, or any tile below.")
+                    Text(String(localized: "Match all conditions in a tile, or any tile below."))
                         .font(.subheadline).foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     ForEach(Array(filters.enumerated()), id: \.element.id) { index, filter in
                         if index > 0 {
-                            Text("OR").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                            Text(String(localized: "OR")).font(.caption.weight(.semibold)).foregroundStyle(.secondary)
                         }
                         HStack(spacing: 12) {
                             Text(filter.summary)
@@ -33,7 +33,7 @@ struct ReviewFiltersView: View {
                             }
                             .buttonStyle(.plain)
                             .foregroundStyle(.secondary)
-                            .accessibilityLabel("Remove filter: \(filter.summary)")
+                            .accessibilityLabel(String(localized: "Remove filter: \(filter.summary)"))
                             .accessibilityIdentifier("filters.remove.\(filter.id)")
                         }
                         .padding(16)
@@ -46,12 +46,12 @@ struct ReviewFiltersView: View {
             .frame(maxWidth: .infinity)
         }
         .background(Color(uiColor: .systemGroupedBackground))
-        .navigationTitle("Filters")
+        .navigationTitle(String(localized: "Filters"))
         .navigationBarTitleDisplayMode(.inline)
         .safeAreaInset(edge: .bottom) {
             HStack(spacing: 12) {
                 Button { showingAddFilter = true } label: {
-                    Label("Add", systemImage: "plus").frame(maxWidth: .infinity)
+                    Label(String(localized: "Add"), systemImage: "plus").frame(maxWidth: .infinity)
                 }
                     .buttonStyle(.bordered)
                     .accessibilityIdentifier("filters.add")
@@ -59,7 +59,7 @@ struct ReviewFiltersView: View {
                     appliedFilters = filters
                     showingReview = true
                 } label: {
-                    Text("Apply").frame(maxWidth: .infinity)
+                    Text(String(localized: "Apply")).frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
                 .foregroundStyle(PruneyStyle.onAccent)
@@ -77,7 +77,7 @@ struct ReviewFiltersView: View {
                 NewReviewFilterView { filters.append($0) }
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") { showingAddFilter = false }
+                            Button(String(localized: "Cancel")) { showingAddFilter = false }
                         }
                     }
             }
@@ -106,37 +106,37 @@ private struct NewReviewFilterView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                criterion("Type", enabled: $typeEnabled) {
-                    selectionMenu("Media type", selection: $category,
+                criterion(String(localized: "Type"), identifier: "type", enabled: $typeEnabled) {
+                    selectionMenu(String(localized: "Media type"), selection: $category,
                                   values: MediaCategory.allCases, title: { $0.title })
                     .accessibilityIdentifier("filter.type")
                 }
-                criterion("Date", enabled: $dateEnabled) {
-                    selectionMenu("Date condition", selection: $dateRule,
+                criterion(String(localized: "Date"), identifier: "date", enabled: $dateEnabled) {
+                    selectionMenu(String(localized: "Date condition"), selection: $dateRule,
                                   values: FilterDateRule.allCases, title: { $0.title })
-                    DatePicker("Creation date", selection: $date, displayedComponents: .date)
+                    DatePicker(String(localized: "Creation date"), selection: $date, displayedComponents: .date)
                         .labelsHidden()
                         .fixedSize(horizontal: true, vertical: false)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .accessibilityIdentifier("filter.date")
                 }
-                criterion("Size", enabled: $sizeEnabled) {
-                    selectionMenu("Size condition", selection: $sizeRule,
+                criterion(String(localized: "Size"), identifier: "size", enabled: $sizeEnabled) {
+                    selectionMenu(String(localized: "Size condition"), selection: $sizeRule,
                                   values: FilterSizeRule.allCases, title: { $0.title })
                     Text(ReviewFilter.sizeLabel(Int(sizeMegabytes)))
                         .font(.headline).monospacedDigit()
                     Slider(value: $sizeMegabytes, in: 1...1_000, step: 1)
-                        .accessibilityLabel("File size threshold")
+                        .accessibilityLabel(String(localized: "File size threshold"))
                         .accessibilityValue(ReviewFilter.sizeLabel(Int(sizeMegabytes)))
                         .accessibilityIdentifier("filter.size")
                     HStack {
-                        Text("1 MB")
+                        Text(String(localized: "1 MB"))
                         Spacer()
-                        Text("1 GB")
+                        Text(String(localized: "1 GB"))
                     }
                     .font(.caption).foregroundStyle(.secondary)
                 }
-                Text("Enable at least one condition. Dates include the selected day. Size uses accessible local files; items with incomplete size measurements cannot match a size condition.")
+                Text(String(localized: "Enable at least one condition. Dates include the selected day. Size uses accessible local files; items with incomplete size measurements cannot match a size condition."))
                     .font(.footnote).foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -145,7 +145,7 @@ private struct NewReviewFilterView: View {
             .frame(maxWidth: .infinity)
         }
         .background(Color(uiColor: .systemGroupedBackground))
-        .navigationTitle("New filter")
+        .navigationTitle(String(localized: "New filter"))
         .navigationBarTitleDisplayMode(.inline)
         .safeAreaInset(edge: .bottom) {
             Button {
@@ -154,7 +154,7 @@ private struct NewReviewFilterView: View {
                                    sizeRule: sizeRule, sizeMegabytes: sizeEnabled ? Int(sizeMegabytes) : nil))
                 dismiss()
             } label: {
-                Text("Add").frame(maxWidth: .infinity)
+                Text(String(localized: "Add")).frame(maxWidth: .infinity)
             }
             .fontWeight(.semibold)
             .buttonStyle(.borderedProminent)
@@ -192,7 +192,7 @@ private struct NewReviewFilterView: View {
         .accessibilityValue(title(selection.wrappedValue))
     }
 
-    private func criterion<Content: View>(_ title: String, enabled: Binding<Bool>, @ViewBuilder content: () -> Content) -> some View {
+    private func criterion<Content: View>(_ title: String, identifier: String, enabled: Binding<Bool>, @ViewBuilder content: () -> Content) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Button { enabled.wrappedValue.toggle() } label: {
                 Image(systemName: enabled.wrappedValue ? "checkmark.circle.fill" : "circle")
@@ -201,9 +201,9 @@ private struct NewReviewFilterView: View {
                     .frame(width: 44, height: 44)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("\(title) condition")
-            .accessibilityValue(enabled.wrappedValue ? "Enabled" : "Disabled")
-            .accessibilityIdentifier("filter.enable.\(title.lowercased())")
+            .accessibilityLabel(String(localized: "\(title) condition"))
+            .accessibilityValue(enabled.wrappedValue ? String(localized: "Enabled") : String(localized: "Disabled"))
+            .accessibilityIdentifier("filter.enable.\(identifier)")
             VStack(alignment: .leading, spacing: 0) {
                 Text(title).font(.headline)
                     .frame(minHeight: 44, alignment: .center)

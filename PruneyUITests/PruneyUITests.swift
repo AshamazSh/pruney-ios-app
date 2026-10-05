@@ -7,7 +7,7 @@ final class PruneyUITests: XCTestCase {
     func testOnboardingDenialAndPersistentOverview() {
         let app = XCUIApplication()
         app.resetAuthorizationStatus(for: .photos)
-        app.launchArguments = ["-resetOnboarding"]
+        app.launchArguments = ["-resetOnboarding", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
         XCTAssertTrue(app.staticTexts["Welcome to Pruney"].exists)
         app.buttons["onboarding.continue"].tap()
@@ -23,7 +23,7 @@ final class PruneyUITests: XCTestCase {
         screenshot.lifetime = .keepAlways
         add(screenshot)
         app.terminate()
-        app.launchArguments = []
+        app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
         XCTAssertTrue(app.staticTexts["Photo access needed"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.buttons["onboarding.continue"].exists)
@@ -33,7 +33,7 @@ final class PruneyUITests: XCTestCase {
     func testAuthorizedLibraryOverview() {
         let app = XCUIApplication()
         app.resetAuthorizationStatus(for: .photos)
-        app.launchArguments = ["-resetOnboarding"]
+        app.launchArguments = ["-resetOnboarding", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
         let onboarding = XCTAttachment(screenshot: app.screenshot())
         onboarding.name = "Onboarding"

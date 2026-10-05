@@ -8,9 +8,9 @@ nonisolated enum MediaCategory: String, CaseIterable, Identifiable, Sendable {
     var id: Self { self }
     var title: String {
         switch self {
-        case .photo: "Photos"
-        case .livePhoto: "Live Photos"
-        case .video: "Videos"
+        case .photo: String(localized: "Photos")
+        case .livePhoto: String(localized: "Live Photos")
+        case .video: String(localized: "Videos")
         }
     }
     static func classify(isVideo: Bool, isLivePhoto: Bool) -> Self {

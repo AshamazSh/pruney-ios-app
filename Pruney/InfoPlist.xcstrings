@@ -1,0 +1,72 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "NSPhotoLibraryUsageDescription": {
+      "extractionState": "manual",
+      "comment": "Photos read/write permission explanation. Actions only occur after user selection and execution.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pruney reviews your photos and videos and applies only the deletion and resizing actions you confirm."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pruney revisa tus fotos y vídeos y solo aplica las eliminaciones y cambios de tamaño que confirmes."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O Pruney analisa suas fotos e vídeos e só aplica as exclusões e os redimensionamentos que você confirmar."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pruney prüft deine Fotos und Videos und führt nur Löschungen und Verkleinerungen aus, die du bestätigst."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pruney examine vos photos et vidéos et applique uniquement les suppressions et redimensionnements que vous confirmez."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pruneyは写真と動画を確認し、あなたが承認した削除とリサイズのみを実行します。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pruney는 사진과 동영상을 검토하고 사용자가 확인한 삭제 및 크기 조절 작업만 적용합니다."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pruney查看你的照片和视频，仅执行你确认的删除和大小调整操作。"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pruney esamina foto e video e applica solo le eliminazioni e i ridimensionamenti che confermi."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pruney просматривает фото и видео и выполняет только подтверждённые вами удаления и уменьшения."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
