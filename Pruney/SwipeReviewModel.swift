@@ -8,7 +8,7 @@ nonisolated enum ReviewDecision: CaseIterable {
 
     var title: String {
         switch self {
-        case .skipped: "Skipped"
+        case .skipped: "Kept"
         case .resized: "Resized"
         case .deleted: "Delete"
         }
@@ -41,12 +41,19 @@ private struct ReviewSelection {
 
 @MainActor @Observable
 final class SwipeReviewModel {
+    private let filters: [ReviewFilter]
+    var isFiltered: Bool { !filters.isEmpty }
+    private(set) var sizeUnavailableFilterCount = 0
     private var pending: [PHAsset] = []
     private var pendingIndex = 0
     private var history: [ReviewSelection] = []
     private var decisionCounts: [ReviewDecision: Int] = [:]
     private(set) var selectionRevision = UUID()
     private(set) var total = 0
+    private(set) var excludedFormatCount = 0
+    private(set) var isPreparingReview = false
+    private(set) var preparationProcessed = 0
+    private(set) var preparationTotal = 0
     private(set) var sortOrder: ReviewSortOrder = .date
     private(set) var isSorting = false
     private(set) var sortingProcessed = 0
@@ -64,6 +71,9 @@ final class SwipeReviewModel {
     var shareError: String?
 
     private var loaded = false
+    private var preparationTask: Task<Void, Never>?
+    private var preparationToken = UUID()
+    private let libraryLoader = ReviewLibraryLoader()
     private var generation = UUID()
     private var requests: [PHImageRequestID] = []
     private var nextImageAssetID: String?
@@ -76,6 +86,10 @@ final class SwipeReviewModel {
     private let sortScanner = LibraryScanner()
     private let exporter = ReviewExporter()
     private var measurements: [String: MediaMeasurement] = [:]
+
+    init(filters: [ReviewFilter] = []) {
+        self.filters = filters
+    }
 
     var reviewed: Int { history.count }
     var remaining: Int { pending.count - pendingIndex }
@@ -101,17 +115,49 @@ final class SwipeReviewModel {
         hasAccess = status == .authorized || status == .limited
         guard hasAccess else { stop(); return }
         if !loaded {
-            let options = PHFetchOptions()
-            options.predicate = NSPredicate(format: "mediaType == %d OR mediaType == %d", PHAssetMediaType.image.rawValue, PHAssetMediaType.video.rawValue)
-            options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-            let assets = PHAsset.fetchAssets(with: options)
-            pending = (0..<assets.count).map { assets.object(at: $0) }
-            total = pending.count
-            loaded = true
-            loadCurrent()
+            prepareReview()
         } else if currentAsset != nil && image == nil && player == nil && !isLoading {
             loadCurrent()
         }
+    }
+
+    private func prepareReview() {
+        guard preparationTask == nil else { return }
+        isPreparingReview = true
+        preparationProcessed = 0
+        preparationTotal = 0
+        let token = preparationToken
+        let filters = filters
+        preparationTask = Task { [weak self, libraryLoader] in
+            do {
+                let result = try await libraryLoader.load(filters: filters) { [weak self] processed, total in
+                    guard let self, self.preparationToken == token else { return }
+                    self.preparationProcessed = processed
+                    self.preparationTotal = total
+                }
+                guard let self, self.preparationToken == token else { return }
+                self.pending = result.assets
+                self.total = result.assets.count
+                self.excludedFormatCount = result.excludedCount
+                self.sizeUnavailableFilterCount = result.sizeUnavailableCount
+                self.measurements.merge(result.measurements) { _, new in new }
+                self.loaded = true
+                self.isPreparingReview = false
+                self.preparationTask = nil
+                self.loadCurrent()
+            } catch {
+                guard let self, self.preparationToken == token else { return }
+                self.isPreparingReview = false
+                self.preparationTask = nil
+            }
+        }
+    }
+
+    private func cancelPreparation() {
+        preparationToken = UUID()
+        preparationTask?.cancel()
+        preparationTask = nil
+        isPreparingReview = false
     }
 
     func decide(_ decision: ReviewDecision) {
@@ -242,7 +288,10 @@ final class SwipeReviewModel {
 
     func cancelSort() { cancelSorting() }
 
-    func pause() { player?.pause() }
+    func pause() {
+        player?.pause()
+        if isPreparingReview { cancelPreparation() }
+    }
 
     private func cancelMedia() {
         generation = UUID()
@@ -254,6 +303,7 @@ final class SwipeReviewModel {
     }
 
     func stop() {
+        cancelPreparation()
         cancelSorting()
         cancelMedia()
         player = nil
@@ -384,6 +434,7 @@ final class SwipeReviewModel {
     }
 
     isolated deinit {
+        preparationTask?.cancel()
         requests.forEach { PHImageManager.default().cancelImageRequest($0) }
         sizeTask?.cancel()
         shareTask?.cancel()

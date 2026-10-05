@@ -13,9 +13,10 @@ extension ReviewDecision {
 }
 
 struct SwipeReviewView: View {
+    var onReturnToLibrary: (Bool) -> Void = { _ in }
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var review = SwipeReviewModel()
+    @State private var review: SwipeReviewModel
     @State private var drag = CGSize.zero
     @State private var mediaSize = CGSize.zero
     @State private var isAnimatingDecision = false
@@ -29,31 +30,56 @@ struct SwipeReviewView: View {
     @State private var actionPlan: ReviewActionPlan?
     @State private var actionPlanRevision: UUID?
     @State private var showingActionSettings = false
+    @State private var directDeletion = ActionExecution()
+    @State private var deletionError: String?
+
+    init(filters: [ReviewFilter] = [], onReturnToLibrary: @escaping (Bool) -> Void = { _ in }) {
+        self.onReturnToLibrary = onReturnToLibrary
+        _review = State(initialValue: SwipeReviewModel(filters: filters))
+    }
 
     var body: some View {
         VStack(spacing: 20) {
             counters
             if !review.hasAccess {
                 ContentUnavailableView("Photo access needed", systemImage: "photo.badge.exclamationmark", description: Text("Return to your library to update Photos access."))
+            } else if review.isPreparingReview {
+                VStack(spacing: 16) {
+                    ProgressView(review.isFiltered ? "Preparing filtered review…" : "Checking formats…")
+                    ProgressView(value: Double(review.preparationProcessed), total: Double(max(1, review.preparationTotal)))
+                    Text("\(review.preparationProcessed) of \(review.preparationTotal) checked")
+                        .font(.caption).monospacedDigit().foregroundStyle(.secondary)
+                }
+                .frame(maxHeight: .infinity)
+                .accessibilityIdentifier("review.checkingFormats")
             } else if review.isComplete {
                 completion
             } else if review.currentAsset != nil {
                 media
                 metadata
             } else {
-                ContentUnavailableView("Your library is empty", systemImage: "photo.on.rectangle", description: Text("There are no photos or videos available to review."))
+                ContentUnavailableView(review.isFiltered ? "No matching items" : review.excludedFormatCount > 0 ? "No supported items" : "Your library is empty", systemImage: "photo.on.rectangle", description: Text(review.isFiltered ? "No supported local items match your filters. Go back to adjust the conditions." : review.excludedFormatCount > 0 ? "The available items use formats Pruney cannot process on this device. Your originals are unchanged." : "There are no photos or videos available to review."))
             }
         }
         .padding(.horizontal, 20)
         .padding(.top, 16)
         .padding(.bottom, 12)
         .background(Color(uiColor: .systemGroupedBackground))
-        .safeAreaInset(edge: .bottom, spacing: 0) { actions }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            if !directDeletion.isRunning { actions }
+        }
         .navigationTitle("Swipe your library")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(directDeletion.isRunning)
+        .background {
+            ReviewNavigationGestureGuard()
+                .frame(width: 0, height: 0)
+                .allowsHitTesting(false)
+                .accessibilityHidden(true)
+        }
         .navigationDestination(isPresented: $showingActionSettings) {
             if let actionPlan {
-                ReviewActionSettingsView(plan: actionPlan, stage: actionPlan.resizeItems.isEmpty ? .delete : .resize)
+                ReviewActionSettingsView(plan: actionPlan, onReturnToLibrary: onReturnToLibrary)
             }
         }
         .toolbar {
@@ -68,8 +94,8 @@ struct SwipeReviewView: View {
             }
         }
         .confirmationDialog("Choose an action for all \(review.remaining) remaining items", isPresented: $showingBulkActions, titleVisibility: .visible) {
-            Button("Skip all") { selectAll(.skipped) }
-            Button("Resize all") { selectAll(.resized) }
+            Button("Keep all") { selectAll(.skipped) }
+            Button("Resize / Make static") { selectAll(.resized) }
             Button("Delete all", role: .destructive) { selectAll(.deleted) }
             Button("Cancel", role: .cancel) {}
         } message: {
@@ -96,8 +122,22 @@ struct SwipeReviewView: View {
             review.stop()
         }
         .onChange(of: scenePhase) { _, phase in
+            directDeletion.isActive = phase == .active
             if phase == .active { review.start() }
             else { review.pause() }
+        }
+        .onChange(of: directDeletion.isFinished) { _, finished in
+            guard finished else { return }
+            if directDeletion.deletedCount > 0 {
+                onReturnToLibrary(true)
+            } else if !directDeletion.issues.isEmpty {
+                deletionError = directDeletion.issues.map(\.message).joined(separator: "\n")
+            }
+        }
+        .alert("Deletion did not complete", isPresented: Binding(get: { deletionError != nil }, set: { if !$0 { deletionError = nil } })) {
+            Button("OK", role: .cancel) { deletionError = nil }
+        } message: {
+            Text(deletionError ?? "")
         }
         .sheet(item: $review.share, onDismiss: { review.clearShare() }) { share in
             ReviewShareSheet(files: share.files)
@@ -125,7 +165,7 @@ struct SwipeReviewView: View {
                     .font(.subheadline.weight(.semibold))
                     .monospacedDigit()
                     .foregroundStyle(decision.color)
-                    .accessibilityLabel("\(decision.title): \(review.count(decision))")
+                    .accessibilityLabel("\(decision == .resized ? "Resize or make static" : decision.title): \(review.count(decision))")
             }
             Spacer(minLength: 8)
             Menu {
@@ -174,7 +214,8 @@ struct SwipeReviewView: View {
                     }
                     .overlay(alignment: decisionBadgeAlignment) {
                         if let decision = outgoingDecision ?? dragDecision {
-                            Label(decision.title, systemImage: decision.symbol)
+                            Label(decision == .resized && review.isLivePhoto ? "Make static" : decision.title,
+                                  systemImage: decision == .resized && review.isLivePhoto ? "livephoto.slash" : decision.symbol)
                                 .font(.subheadline.bold())
                                 .padding(12)
                                 .foregroundStyle(decision == .resized ? Color.black : Color.white)
@@ -185,9 +226,10 @@ struct SwipeReviewView: View {
                     .rotationEffect(.degrees(reduceMotion ? 0 : max(-12, min(12, Double(drag.width / 35)))))
                     .offset(x: drag.width, y: drag.height)
                     .opacity(cardOpacity)
-                    // Video keeps its native playback and scrubbing gestures; use the action buttons.
-                    .modifier(PhotoReviewGesture(enabled: !review.isVideo && review.canDecide && !isAnimatingDecision, drag: $drag, onDecision: record))
+                    .modifier(ReviewCardDrag(enabled: review.player == nil && review.canDecide && !isAnimatingDecision,
+                                             drag: $drag, onDragStarted: review.pause, onDecision: record))
             }
+            .coordinateSpace(name: "review.media.drag")
             .onAppear { mediaSize = geometry.size }
             .onChange(of: geometry.size) { _, size in mediaSize = size }
         }
@@ -213,7 +255,10 @@ struct SwipeReviewView: View {
             RoundedRectangle(cornerRadius: 24)
                 .fill(Color(uiColor: .secondarySystemGroupedBackground))
             if let player = review.player {
-                VideoPlayer(player: player)
+                ReviewVideoCard(player: player,
+                                dragSurface: ReviewCardDrag(enabled: review.canDecide && !isAnimatingDecision,
+                                                            drag: $drag, onDragStarted: review.pause, onDecision: record),
+                                controlsEnabled: review.canDecide && !isAnimatingDecision && drag == .zero)
             } else if let image = review.image {
                 Image(uiImage: image)
                     .resizable()
@@ -365,6 +410,18 @@ struct SwipeReviewView: View {
                 .font(.caption2)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+            if review.excludedFormatCount > 0 {
+                Text("\(review.excludedFormatCount) unsupported items excluded")
+                    .font(.caption2).foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .accessibilityIdentifier("review.excludedFormats")
+            }
+            if review.sizeUnavailableFilterCount > 0 {
+                Text("\(review.sizeUnavailableFilterCount) items excluded: size unavailable")
+                    .font(.caption2).foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .accessibilityIdentifier("review.unavailableFilterSizes")
+            }
         }
         .padding(.horizontal, 8)
         .padding(.top, 12)
@@ -373,7 +430,7 @@ struct SwipeReviewView: View {
     }
 
     private var undoControl: some View {
-        let enabled = review.canUndo && !isAnimatingDecision
+        let enabled = review.canUndo && !isAnimatingDecision && !directDeletion.isRunning
         return UndoHoldButton(
             enabled: enabled,
             onPressChanged: { holdingUndo = $0 },
@@ -409,7 +466,7 @@ struct SwipeReviewView: View {
 
     private func actionButton(_ decision: ReviewDecision) -> some View {
         Button { record(decision) } label: {
-            Image(systemName: decision.symbol)
+            Image(systemName: decision == .resized && review.isLivePhoto ? "livephoto.slash" : decision.symbol)
                 .font(.system(size: 25, weight: .semibold))
                 .foregroundStyle(decision == .resized ? Color.black.opacity(0.8) : Color.white)
                 .frame(width: 64, height: 64)
@@ -417,7 +474,7 @@ struct SwipeReviewView: View {
         }
         .disabled(!review.canDecide || isAnimatingDecision)
         .opacity(review.canDecide ? 1 : 0.4)
-        .accessibilityLabel(decision == .skipped ? "Skip current item" : decision == .resized ? "Mark current item for resizing" : "Mark current item for deletion")
+        .accessibilityLabel(decision == .skipped ? "Keep current item" : decision == .resized ? (review.isLivePhoto ? "Make current Live Photo static" : "Mark current item for resizing") : "Mark current item for deletion")
         .accessibilityIdentifier("review.\(decision)")
     }
 
@@ -465,35 +522,61 @@ struct SwipeReviewView: View {
                 .font(.system(size: 64))
                 .foregroundStyle(ReviewDecision.skipped.color)
             Text("All reviewed").font(.title.bold())
-            Text("You’ve chosen an action for every item. Final changes happen later; your originals are unchanged.")
+            Text(review.count(.resized) > 0 ? "Review your selected changes next. Your originals are unchanged." : "Your choices are ready. Your originals are unchanged.")
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-            Button("Continue to actions") {
-                if actionPlanRevision != review.selectionRevision {
-                    actionPlan = review.makeActionPlan()
-                    actionPlanRevision = review.selectionRevision
+            if directDeletion.isRunning {
+                ProgressView("Deleting items…")
+                Text("Keep Pruney open until this finishes.")
+                    .font(.footnote).foregroundStyle(.secondary)
+            } else if review.count(.resized) > 0 {
+                Button("Continue") {
+                    if actionPlanRevision != review.selectionRevision {
+                        actionPlan = review.makeActionPlan()
+                        actionPlanRevision = review.selectionRevision
+                    }
+                    showingActionSettings = true
                 }
-                showingActionSettings = true
-            }
                 .buttonStyle(.borderedProminent)
+                .foregroundStyle(PruneyStyle.onAccent)
                 .accessibilityIdentifier("review.continueToActions")
+            } else if review.count(.deleted) > 0 {
+                Button("Delete \(review.count(.deleted))", role: .destructive) {
+                    directDeletion = ActionExecution()
+                    directDeletion.isActive = scenePhase == .active
+                    directDeletion.start(review.makeActionPlan())
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(ReviewDecision.deleted.color)
+                .accessibilityIdentifier("review.deleteSelected")
+            } else {
+                Button("Back to library") { onReturnToLibrary(false) }
+                    .buttonStyle(.borderedProminent)
+                    .foregroundStyle(PruneyStyle.onAccent)
+                    .accessibilityIdentifier("review.backToLibrary")
+            }
             Spacer()
         }
         .padding(24)
     }
 }
 
-private struct PhotoReviewGesture: ViewModifier {
+private struct ReviewCardDrag: ViewModifier {
     let enabled: Bool
     @Binding var drag: CGSize
+    let onDragStarted: () -> Void
     let onDecision: (ReviewDecision) -> Void
 
     func body(content: Content) -> some View {
         content.gesture(
-            DragGesture(minimumDistance: 20)
+            DragGesture(minimumDistance: 20, coordinateSpace: .named("review.media.drag"))
                 .onChanged { value in
                     guard enabled else { return }
-                    drag = value.translation
+                    if drag == .zero { onDragStarted() }
+                    // Follow the finger in the stationary container, without return-animation lag.
+                    var transaction = Transaction()
+                    transaction.disablesAnimations = true
+                    withTransaction(transaction) { drag = value.translation }
                 }
                 .onEnded { value in
                     guard enabled else { return }
@@ -508,7 +591,8 @@ private struct PhotoReviewGesture: ViewModifier {
                         withAnimation(.snappy) { drag = .zero }
                     }
                 },
-            including: enabled ? .all : .none
+            // A video surface owns its drag; playback controls remain outside that gesture area.
+            including: enabled ? .all : .subviews
         )
     }
 }

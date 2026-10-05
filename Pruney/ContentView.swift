@@ -1,11 +1,6 @@
     import SwiftUI
 import Photos
 
-private enum PruneyStyle {
-    static let plum = Color(red: 0.36, green: 0.20, blue: 0.46)
-    static let background = Color(uiColor: .systemGroupedBackground)
-}
-
 extension MediaCategory {
     var color: Color {
         switch self {
@@ -30,6 +25,9 @@ struct ContentView: View {
     @State private var requestingAccess = false
     @State private var showingSizeInformation = false
     @State private var showingSwipeReview = false
+    @State private var showingFilters = false
+    @State private var showingRecentlyDeletedNotice = false
+    @State private var pendingRecentlyDeletedNotice = false
 
     var body: some View {
         Group {
@@ -39,7 +37,7 @@ struct ContentView: View {
         .task { if hasCompletedOnboarding { analysis.refresh() } }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active, hasCompletedOnboarding { analysis.refresh() }
-            if phase == .background { analysis.stop() }
+            if phase == .background { analysis.suspend() }
         }
     }
 
@@ -76,12 +74,13 @@ struct ContentView: View {
                     }
                 } label: {
                     HStack {
-                        if requestingAccess { ProgressView().tint(.white) }
+                        if requestingAccess { ProgressView().tint(PruneyStyle.onAccent) }
                         Text("Continue").fontWeight(.semibold)
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 12)
                 }
                 .buttonStyle(.borderedProminent)
+                .foregroundStyle(PruneyStyle.onAccent)
                 .disabled(requestingAccess)
                 .accessibilityIdentifier("onboarding.continue")
                 Text("Next, allow access to your photo library.")
@@ -124,7 +123,9 @@ struct ContentView: View {
                         } else if analysis.hasAnalyzed && analysis.summary.assetCount == 0 {
                             notice(title: "Your library is empty", message: analysis.authorization == .limited ? "There are no photos or videos in the shared part of your library. Update access in Settings or add new files." : "Your library has no photos or videos yet. Pruney will update the totals when you add some.", symbol: "photo.on.rectangle") { EmptyView() }
                         }
-                        reviewOptions
+                        if analysis.hasAnalyzed && !analysis.isAnalyzing {
+                            reviewOptions
+                        }
                     } else {
                         accessError
                     }
@@ -137,7 +138,18 @@ struct ContentView: View {
             .navigationTitle("Pruney")
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(isPresented: $showingSwipeReview) {
-                SwipeReviewView()
+                SwipeReviewView(onReturnToLibrary: { didRemoveAssets in
+                    pendingRecentlyDeletedNotice = didRemoveAssets
+                    showingSwipeReview = false
+                    analysis.analyze()
+                })
+            }
+            .navigationDestination(isPresented: $showingFilters) {
+                ReviewFiltersView(onReturnToLibrary: { didRemoveAssets in
+                    pendingRecentlyDeletedNotice = didRemoveAssets
+                    showingFilters = false
+                    analysis.analyze()
+                })
             }
             .toolbar {
                 if analysis.canRead {
@@ -151,6 +163,17 @@ struct ContentView: View {
                     }
                 }
             }
+            .alert("Recently Deleted", isPresented: $showingRecentlyDeletedNotice) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text("Deleted files remain in Recently Deleted for up to 30 days. To free up space now, open Photos and empty Recently Deleted yourself.")
+            }
+            .onAppear {
+                if pendingRecentlyDeletedNotice {
+                    pendingRecentlyDeletedNotice = false
+                    showingRecentlyDeletedNotice = true
+                }
+            }
         }
     }
 
@@ -159,8 +182,8 @@ struct ContentView: View {
             ReviewOptionTile(
                 title: "Start swiping",
                 description: analysis.authorization == .limited
-                    ? "Review all the photos and videos you’ve shared with Pruney, one swipe at a time."
-                    : "Review your entire photo and video library, one swipe at a time.",
+                    ? "Review supported photos and videos you’ve shared with Pruney, one swipe at a time."
+                    : "Review supported photos and videos in your library, one swipe at a time.",
                 symbol: "rectangle.stack",
                 isPrimary: true,
                 action: { showingSwipeReview = true }
@@ -171,7 +194,8 @@ struct ContentView: View {
                 title: "Set up filters",
                 description: "Choose which photos and videos to review before you start swiping.",
                 symbol: "slider.horizontal.3",
-                isPrimary: false
+                isPrimary: false,
+                action: { showingFilters = true }
             )
             .accessibilityIdentifier("library.setUpFilters")
         }
@@ -269,6 +293,7 @@ struct ContentView: View {
             if analysis.authorization == .notDetermined {
                 Button("Allow access") { Task { await analysis.requestAccess() } }
                     .buttonStyle(.borderedProminent)
+                    .foregroundStyle(PruneyStyle.onAccent)
             } else if analysis.authorization != .restricted {
                 settingsButton
             }
@@ -290,6 +315,7 @@ struct ContentView: View {
             }
         }
         .buttonStyle(.borderedProminent)
+        .foregroundStyle(PruneyStyle.onAccent)
     }
 
     private func notice<Actions: View>(title: String, message: String, symbol: String, @ViewBuilder actions: () -> Actions) -> some View {
@@ -317,19 +343,19 @@ private struct ReviewOptionTile: View {
             HStack(alignment: .top, spacing: 16) {
                 Image(systemName: symbol)
                     .font(.title2)
-                    .foregroundStyle(isPrimary ? Color.white : PruneyStyle.plum)
+                    .foregroundStyle(isPrimary ? PruneyStyle.onAccent : PruneyStyle.plum)
                     .frame(width: 44, height: 44)
                     .background(
-                        isPrimary ? Color.white.opacity(0.15) : PruneyStyle.plum.opacity(0.09),
+                        isPrimary ? PruneyStyle.onAccent.opacity(0.15) : PruneyStyle.plum.opacity(0.09),
                         in: RoundedRectangle(cornerRadius: 14)
                     )
                 VStack(alignment: .leading, spacing: 8) {
                     Text(title)
                         .font(.headline)
-                        .foregroundStyle(isPrimary ? Color.white : Color.primary)
+                        .foregroundStyle(isPrimary ? PruneyStyle.onAccent : Color.primary)
                     Text(description)
                         .font(.subheadline)
-                        .foregroundStyle(isPrimary ? Color.white.opacity(0.85) : Color.secondary)
+                        .foregroundStyle(isPrimary ? PruneyStyle.onAccent.opacity(0.85) : Color.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)

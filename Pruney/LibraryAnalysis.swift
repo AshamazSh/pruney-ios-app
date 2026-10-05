@@ -64,10 +64,7 @@ nonisolated private final class ResourceRead: @unchecked Sendable {
 }
 
 actor LibraryScanner {
-    func scan(update: @escaping @MainActor @Sendable (LibrarySummary) -> Void) async throws -> LibrarySummary {
-        let options = PHFetchOptions()
-        options.predicate = NSPredicate(format: "mediaType == %d OR mediaType == %d", PHAssetMediaType.image.rawValue, PHAssetMediaType.video.rawValue)
-        let assets = PHAsset.fetchAssets(with: options)
+    func scan(_ assets: PHFetchResult<PHAsset>, update: @escaping @MainActor @Sendable (LibrarySummary) -> Void) async throws -> LibrarySummary {
         var summary = LibrarySummary(assetCount: assets.count)
         await update(summary)
         for index in 0..<assets.count {
@@ -126,6 +123,8 @@ final class LibraryAnalysis: NSObject, PHPhotoLibraryChangeObserver {
     private var scanTask: Task<Void, Never>?
     private var generation = UUID()
     private var observing = false
+    private var observedAssets: PHFetchResult<PHAsset>?
+    private var isForeground = true
     var canRead: Bool { authorization == .authorized || authorization == .limited }
 
     func requestAccess() async {
@@ -134,31 +133,41 @@ final class LibraryAnalysis: NSObject, PHPhotoLibraryChangeObserver {
     }
 
     func refresh() {
+        isForeground = true
         let previous = authorization
         authorization = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         guard canRead else {
             stop()
             summary = LibrarySummary()
             hasAnalyzed = false
+            observedAssets = nil
             return
         }
         if !observing {
             PHPhotoLibrary.shared().register(self)
             observing = true
         }
-        if !hasAnalyzed || previous != authorization { analyze() }
+        if previous != authorization || (!hasAnalyzed && !isAnalyzing) { analyze() }
     }
 
     func analyze() {
         guard canRead else { return }
+        guard isForeground else {
+            hasAnalyzed = false
+            return
+        }
         stop()
+        let options = PHFetchOptions()
+        options.predicate = NSPredicate(format: "mediaType == %d OR mediaType == %d", PHAssetMediaType.image.rawValue, PHAssetMediaType.video.rawValue)
+        let assets = PHAsset.fetchAssets(with: options)
+        observedAssets = assets
         let token = generation
         summary = LibrarySummary()
         hasAnalyzed = false
         isAnalyzing = true
         scanTask = Task { [weak self, scanner] in
             do {
-                let result = try await scanner.scan { [weak self] partial in
+                let result = try await scanner.scan(assets) { [weak self] partial in
                     guard let self, self.generation == token else { return }
                     self.summary = partial
                 }
@@ -180,11 +189,47 @@ final class LibraryAnalysis: NSObject, PHPhotoLibraryChangeObserver {
         isAnalyzing = false
     }
 
+    func suspend() {
+        isForeground = false
+        stop()
+    }
+
     nonisolated func photoLibraryDidChange(_ changeInstance: PHChange) {
         Task { @MainActor [weak self] in
-            self?.authorization = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-            if self?.canRead == true { self?.analyze() } else { self?.refresh() }
+            self?.handleLibraryChange(changeInstance)
         }
+    }
+
+    private func handleLibraryChange(_ change: PHChange) {
+        let previous = authorization
+        authorization = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        guard canRead else {
+            stop()
+            summary = LibrarySummary()
+            hasAnalyzed = false
+            observedAssets = nil
+            return
+        }
+        if previous != authorization {
+            analyze()
+            return
+        }
+        guard let observedAssets, let details = change.changeDetails(for: observedAssets) else { return }
+        self.observedAssets = details.fetchResultAfterChanges
+        // Albums, favorites, and other metadata do not change the measured resource bytes.
+        let needsAnalysis = !details.hasIncrementalChanges
+            || !details.insertedObjects.isEmpty
+            || !details.removedObjects.isEmpty
+            || details.changedObjects.contains { asset in
+                let index = observedAssets.index(of: asset)
+                guard index != NSNotFound else { return true }
+                let previousAsset = observedAssets.object(at: index)
+                guard let objectChange = change.changeDetails(for: previousAsset) else { return false }
+                return objectChange.assetContentChanged
+                    || objectChange.objectBeforeChanges.mediaType != objectChange.objectAfterChanges?.mediaType
+                    || objectChange.objectBeforeChanges.mediaSubtypes != objectChange.objectAfterChanges?.mediaSubtypes
+            }
+        if needsAnalysis { analyze() }
     }
 
     isolated deinit {

@@ -3,21 +3,21 @@ import SwiftUI
 
 struct ReviewActionSettingsView: View {
     let plan: ReviewActionPlan
-    let stage: ReviewActionStage
-    @State private var showingDeleteSettings = false
+    var onReturnToLibrary: (Bool) -> Void = { _ in }
+    @State private var showingFinalReview = false
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 3)
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                Text(stage == .resize ? "Choose the items to resize and set compression for each one." : "Choose the items to delete. Uncheck anything you want to keep.")
+                Text("Choose items to resize or make static. Live Photos keep their original still image without motion.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-                if plan.items(for: stage).isEmpty {
-                    ContentUnavailableView("No items selected", systemImage: stage == .resize ? "photo.on.rectangle" : "trash", description: Text(stage == .resize ? "No items were marked for resizing." : "No items were marked for deletion."))
+                if plan.resizeItems.isEmpty {
+                    ContentUnavailableView("No items selected", systemImage: "photo.on.rectangle", description: Text("No items were marked for resizing."))
                 }
                 ForEach(MediaCategory.allCases) { category in
-                    let items = plan.items(for: stage).filter { $0.category == category }
+                    let items = plan.resizeItems.filter { $0.category == category }
                     if !items.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack {
@@ -25,6 +25,10 @@ struct ReviewActionSettingsView: View {
                                 Spacer()
                                 Text("\(items.filter(\.isSelected).count)/\(items.count)")
                                     .font(.subheadline).monospacedDigit().foregroundStyle(.secondary)
+                            }
+                            if category == .livePhoto {
+                                Text("Make static — keep the still image at its original resolution.")
+                                    .font(.caption).foregroundStyle(.secondary)
                             }
                             LazyVGrid(columns: columns, spacing: 10) {
                                 ForEach(items) { item in
@@ -40,34 +44,32 @@ struct ReviewActionSettingsView: View {
             .frame(maxWidth: .infinity)
         }
         .background(Color(uiColor: .systemGroupedBackground))
-        .navigationTitle(stage.title)
+        .navigationTitle("Resize & make static")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            if stage == .resize {
+            if plan.resizeItems.contains(where: { !$0.makesStatic }) {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu("Apply all") {
                         ForEach(CompressionLevel.allCases) { level in
                             Button(level.title) { plan.setCompressionForAll(level) }
                         }
                     }
-                    .disabled(plan.resizeItems.isEmpty)
-                    .accessibilityLabel("Apply compression to all items")
+                    .accessibilityLabel("Apply compression to all photos and videos")
                     .accessibilityIdentifier("resize.applyAll")
                 }
             }
         }
         .safeAreaInset(edge: .bottom) {
             VStack(spacing: 12) {
-                Text("\(plan.selectedCount(for: stage)) selected")
+                Text("\(plan.selectedCount(for: .resize)) selected")
                     .font(.subheadline.weight(.medium)).monospacedDigit()
-                if stage == .resize {
-                    Button("Continue to deletion") { showingDeleteSettings = true }
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
-                        .buttonStyle(.borderedProminent)
-                        .accessibilityIdentifier("resize.continueToDeletion")
-                }
+                Button("Continue") { showingFinalReview = true }
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                    .buttonStyle(.borderedProminent)
+                    .foregroundStyle(PruneyStyle.onAccent)
+                    .accessibilityIdentifier("resize.continueToDeletion")
                 Text("No changes applied yet.")
                     .font(.caption).foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -77,19 +79,19 @@ struct ReviewActionSettingsView: View {
             .frame(maxWidth: .infinity)
             .background(.regularMaterial)
         }
-        .navigationDestination(isPresented: $showingDeleteSettings) {
-            ReviewActionSettingsView(plan: plan, stage: .delete)
+        .navigationDestination(isPresented: $showingFinalReview) {
+            FinalActionView(plan: plan, onReturnToLibrary: onReturnToLibrary)
         }
     }
 
     private var selectionColor: Color {
-        stage == .resize ? ReviewDecision.resized.color : ReviewDecision.deleted.color
+        ReviewDecision.resized.color
     }
 
     private func itemTile(_ item: ReviewActionItem) -> some View {
         ZStack {
             Button {
-                plan.toggleSelection(id: item.id, stage: stage)
+                plan.toggleSelection(id: item.id, stage: .resize)
             } label: {
                 ActionAssetThumbnail(asset: item.asset)
                     .aspectRatio(1, contentMode: .fit)
@@ -103,10 +105,10 @@ struct ReviewActionSettingsView: View {
             .accessibilityIdentifier("actions.item.\(item.id)")
         }
         .overlay(alignment: .topTrailing) {
-            Button { plan.toggleSelection(id: item.id, stage: stage) } label: {
+            Button { plan.toggleSelection(id: item.id, stage: .resize) } label: {
                 Image(systemName: item.isSelected ? "checkmark" : "circle")
                     .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(item.isSelected && stage == .resize ? Color.black : Color.white)
+                    .foregroundStyle(item.isSelected ? Color.black : Color.white)
                     .frame(width: 24, height: 24)
                     .background(item.isSelected ? selectionColor : Color.black.opacity(0.5), in: Circle())
                     .frame(width: 44, height: 44)
@@ -116,7 +118,16 @@ struct ReviewActionSettingsView: View {
             .accessibilityLabel(item.isSelected ? "Deselect item" : "Select item")
         }
         .overlay(alignment: .bottomTrailing) {
-            if stage == .resize && item.isSelected {
+            if item.isSelected && item.makesStatic {
+                Text("Make static")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.black)
+                    .padding(.horizontal, 9).padding(.vertical, 6)
+                    .frame(maxWidth: .infinity)
+                    .background(selectionColor, in: Capsule())
+                    .padding(8)
+                    .allowsHitTesting(false)
+            } else if item.isSelected {
                 Menu {
                     Picker("Compression", selection: Binding(
                         get: { item.compressionLevel },

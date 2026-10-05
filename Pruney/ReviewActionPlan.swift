@@ -3,12 +3,19 @@ import Photos
 
 nonisolated enum ReviewActionStage {
     case resize, delete
-    var title: String { self == .resize ? "Resize settings" : "Delete settings" }
 }
 
 nonisolated enum CompressionLevel: String, CaseIterable, Identifiable {
     case light, balanced, high, maximum
     var id: Self { self }
+    var dimensionScale: Double {
+        switch self {
+        case .light: 0.9
+        case .balanced: 0.8
+        case .high: 0.7
+        case .maximum: 0.5
+        }
+    }
     var title: String {
         switch self {
         case .light: "Light"
@@ -27,6 +34,7 @@ struct ReviewActionItem: Identifiable {
     var category: MediaCategory {
         MediaCategory.classify(isVideo: asset.mediaType == .video, isLivePhoto: asset.mediaSubtypes.contains(.photoLive))
     }
+    var makesStatic: Bool { category == .livePhoto }
 }
 
 @MainActor @Observable
@@ -56,13 +64,16 @@ final class ReviewActionPlan {
     }
 
     func setCompression(_ level: CompressionLevel, id: String) {
-        guard let index = resizeItems.firstIndex(where: { $0.id == id }) else { return }
+        guard let index = resizeItems.firstIndex(where: { $0.id == id }), !resizeItems[index].makesStatic else { return }
         resizeItems[index].compressionLevel = level
     }
 
     func setCompressionForAll(_ level: CompressionLevel) {
-        for index in resizeItems.indices {
+        for index in resizeItems.indices where !resizeItems[index].makesStatic {
             resizeItems[index].compressionLevel = level
         }
     }
+
+    var selectedStaticCount: Int { resizeItems.filter { $0.isSelected && $0.makesStatic }.count }
+    var selectedResizeCount: Int { resizeItems.filter { $0.isSelected && !$0.makesStatic }.count }
 }
