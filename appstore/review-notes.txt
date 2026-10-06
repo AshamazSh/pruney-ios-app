@@ -1,0 +1,5 @@
+Pruney requires no login; tap Continue on first launch to grant full or limited Photos access, and use disposable, locally stored media for testing.
+Swipe left to select deletion, right to keep, or up to resize; for Live Photos, the upward action selects Make static, and Keep all in the double-forward menu can finish the remaining review quickly.
+Reviewing and configuring actions do not change files; Delete X or Start applies the selected actions subject to Photos system confirmation, with originals moved to Recently Deleted.
+The free allowance is 50 deletions and 10 resize/Make static actions per run; exceeding either limit opens the non-consumable lifetime Pro offer (com.ashamazsh.pruney.pro.lifetime), with Restore purchases available and cancellation preserving selections.
+For review questions, contact Ashamaz Shidov at ashamazsh@gmail.com.

@@ -53,3 +53,11 @@ Apple references: [screenshot dimensions](https://developer.apple.com/help/app-s
 ## Validation
 
 Both Debug and Release simulator builds succeeded. The generated artwork was inspected visually, and the renderer checked screenshot dimensions, metadata lengths, and keyword bytes. Tests were not run. The fixtures do not validate real destructive execution, encoding results, iCloud behavior, or store purchase behavior.
+
+## Privacy policy
+
+`privacy-policy.md` contains the English Privacy Policy for the implemented app, naming Ashamaz Shidov and the contact address provided by the developer. It covers on-device Photos processing, local preferences and temporary files, user-initiated sharing, Apple purchases and diagnostics, support correspondence, and user choices. Publish it at a publicly accessible URL for App Store Connect. The policy is not yet linked inside the app, and creating this document does not publish it or change App Store Connect privacy answers. Review and update the support-handling commitments if operational practices change. No translations were created.
+
+## App Review notes
+
+`review-notes.txt` contains English text for App Store Connect's Review Notes field. It covers permission setup, local test-media requirements, swipe and execution steps, per-run free limits, the non-consumable lifetime product ID, restoration, and the developer's review contact. The text was prepared from the current implementation; creating it does not submit or publish the notes.
