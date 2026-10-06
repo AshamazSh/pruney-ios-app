@@ -64,7 +64,7 @@ With photo access, the overview shows two action tiles only after library analys
 - Holding undo for 1.5 seconds fills a circular progress ring and opens a reset confirmation. A short tap still undoes one decision; releasing the hold early cancels the ring. Confirming reset clears all session decisions and counters and rebuilds the full queue in the selected sort order. Cancelling the alert preserves selections. An equivalent reset action is available to accessibility users. No originals are modified.
 - The navigation bar’s **forward** button opens a choice of Keep all, Resize all, or Delete all for remaining items, including the current card. The chosen action records a decision for each remaining asset without changing earlier decisions or modifying originals. Undo restores those selections one item at a time, in reverse selection order.
 - Button decisions and completed photo or video drags animate the current card offscreen: right for keep, up for resize, left for delete. The queue advances after the animation, with repeated decisions, undo, and sharing blocked during departure. Reduce Motion replaces departure with a short fade.
-- One upcoming photo or video poster is prefetched locally and displayed beneath the current card. Dragging reveals it; an insufficient drag returns the current card to its original position. Prefetching does not download cloud resources or start video playback.
+- One upcoming photo or video poster is prefetched locally and displayed beneath the current card. Upcoming videos and current videos awaiting their local player use the same video-card layout, including the playback panel and known asset duration; controls stay inactive until playback is ready. Loading the player replaces the poster within the existing media surface without adding a panel or resizing the preview. Dragging reveals it; an insufficient drag returns the current card to its original position. Prefetching does not download cloud resources or start video playback.
 - On photos and the video surface, swipe right to keep, left to mark for deletion, or up to mark for resizing (Make static for Live Photos). Video playback pauses when dragging starts, including drags that return the card to its original position.
 - Drag translation is measured in the stationary media container so card movement and rotation do not feed back into the gesture. Finger tracking updates without implicit animation; return and departure animations remain enabled. Video controls ignore touches during dragging without changing their enabled appearance.
 - Sharing exports accessible asset resources to temporary files and opens the system share sheet. Live Photos share their still image and motion video as separate files. Temporary exports are removed after dismissal; originals are unchanged.
@@ -174,9 +174,16 @@ Additional collection filters and handling of assets reviewed in previous sessio
 | `Pruney/ReviewActionSettingsView.swift` | Three-column resize grid, local thumbnails, selection and compression controls, and navigation to final review |
 | `PruneyTests/PruneyTests.swift` | Classification, byte totals, partial results, and empty-library unit tests |
 | `PruneyUITests/PruneyUITests.swift` | Permission grant/denial, overview, and onboarding persistence UI tests |
+| `PruneyTests/ReleaseReadinessTests.swift` | Filter boundaries, action settings, quotas, execution refusal, and format-policy units |
+| `PruneyTests/PhotoPreparationIntegrationTests.swift` | Opt-in generated-media preparation, validation, and cleanup checks |
+| `PruneyTests/StoreKitReadinessTests.swift` | Opt-in local purchase, pending approval, refund, and product retry checks |
+| `PruneyUITests/ReleaseReadinessUITests.swift` | Opt-in disposable-library review, quota, playback, and mutation scenarios |
+| `docs/release-readiness-2026-10-06.md` | Release QA evidence, findings, blockers, and reproduction instructions |
+| `Pruney/PrivacyInfo.xcprivacy` | Required-reason UserDefaults declaration for app-local onboarding preferences |
 | `Pruney.xcodeproj` | Xcode project, scheme, build settings, and Photos usage description |
 | `AGENTS.md` | Instructions for agents working in this repository |
 | `scripts/import-simulator-media.py` | Import local photo/video folders into an iOS Simulator Photos library |
+| `scripts/create-qa-media.swift` | Generate disposable PNG, GIF, JPEG, and HEIC fixtures for release QA |
 
 ## Build and run
 
@@ -240,3 +247,21 @@ For a Debug build, the launch argument `-resetOnboarding` clears the `hasComplet
 The `appstore/` folder contains five promotional screenshots and a metadata text file for each of the ten supported languages. Screenshots use the 6.5-inch 1242 × 2688 format, localized titles, a phone frame, and actual app screens with read-only demonstration states. See [appstore/README.md](appstore/README.md) for language mappings, source artwork, and regeneration commands.
 
 Debug builds recognize `-appStoreScreenshot overview|swipe|filters|resize|final` for asset capture. This presentation disables interaction, uses representative library totals and selections, and never executes changes. It requires demonstration media in a dedicated simulator for previews. The fixture and launch argument are excluded from Release builds; regular launches retain the normal onboarding and Photos access flow.
+
+## Release readiness audit
+
+The user explicitly authorized release testing on 2026-10-06. See [the audit report](docs/release-readiness-2026-10-06.md) for current results, confirmed findings, reproduction instructions and unverified states; earlier feature-specific validation notes above describe their historical checks.
+
+Added pure release-readiness unit coverage, opt-in real-media preparation tests, opt-in StoreKit lifecycle tests, and an opt-in UI suite that includes recoverable mutations on a dedicated disposable simulator. `scripts/create-qa-media.swift` generates reproducible synthetic image fixtures. The baseline tests, expanded pure units, real image/video preparation and focused UI scenarios passed as detailed in the report. Local StoreKit lifecycle checks are blocked by a simulator test-session setup error. Simulator and unsigned device Release builds succeeded. The audit identifies a missing required-reason privacy manifest and clipping at maximum accessibility text size; no product fixes were applied during the audit.
+
+## Privacy manifest
+
+`Pruney/PrivacyInfo.xcprivacy` declares `NSPrivacyAccessedAPICategoryUserDefaults` with reason `CA92.1`: reading and writing information accessible only to Pruney itself. This covers the app-local onboarding completion preference used by `@AppStorage` and its Debug reset. The manifest is included as an app resource through the synchronized source folder, without additional project references. It declares required-reason API use; it does not replace the App Store Connect privacy questionnaire or the Photos permission explanation.
+
+The high-priority manifest finding from the release audit was resolved in a follow-up authorized by the user. The plist was linted, Debug simulator and unsigned device Release builds succeeded, and the manifest contents were verified in the root of both built app bundles. Unit and UI tests were not rerun for this resource-only fix. Signed archive validation and App Store Connect upload remain unverified.
+
+## Supported orientations
+
+The app supports iPhone and iPad. iPhone uses portrait orientation. iPad declares portrait, upside-down portrait, landscape left, and landscape right in both Debug and Release so its orientation declarations meet the iPad multitasking requirement. The existing native launch storyboard remains in use.
+
+The previous iPad portrait-only declaration caused an App Store Connect invalid-bundle error. The declaration was corrected without disabling multitasking or removing iPad support. See the release audit follow-up for bundle verification; iPad landscape and multitasking layouts still require visual verification.

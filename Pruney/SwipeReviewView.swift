@@ -244,7 +244,7 @@ struct SwipeReviewView: View {
                     .rotationEffect(.degrees(reduceMotion ? 0 : max(-12, min(12, Double(drag.width / 35)))))
                     .offset(x: drag.width, y: drag.height)
                     .opacity(cardOpacity)
-                    .modifier(ReviewCardDrag(enabled: review.player == nil && review.canDecide && !isAnimatingDecision,
+                    .modifier(ReviewCardDrag(enabled: !review.isVideo && review.canDecide && !isAnimatingDecision,
                                              drag: $drag, onDragStarted: review.pause, onDecision: record))
             }
             .coordinateSpace(name: "review.media.drag")
@@ -272,11 +272,16 @@ struct SwipeReviewView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 24)
                 .fill(Color(uiColor: .secondarySystemGroupedBackground))
-            if let player = review.player {
-                ReviewVideoCard(player: player,
+            if review.isVideo {
+                ReviewVideoCard(player: review.player,
+                                poster: review.image,
+                                durationHint: review.currentAsset?.duration ?? 0,
+                                isLoading: review.isLoading,
+                                mediaError: review.mediaError,
                                 dragSurface: ReviewCardDrag(enabled: review.canDecide && !isAnimatingDecision,
                                                             drag: $drag, onDragStarted: review.pause, onDecision: record),
                                 controlsEnabled: review.canDecide && !isAnimatingDecision && drag == .zero)
+                    .id(review.currentAsset?.localIdentifier)
             } else if let image = review.image {
                 Image(uiImage: image)
                     .resizable()
@@ -301,7 +306,17 @@ struct SwipeReviewView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 24)
                 .fill(Color(uiColor: .secondarySystemGroupedBackground))
-            if let image = review.nextImage {
+            if review.nextAsset?.mediaType == .video {
+                ReviewVideoCard(player: nil,
+                                poster: review.nextImage,
+                                durationHint: review.nextAsset?.duration ?? 0,
+                                isLoading: review.isLoadingNextImage,
+                                mediaError: review.nextImage == nil && !review.isLoadingNextImage ? String(localized: "Preview unavailable") : nil,
+                                dragSurface: ReviewCardDrag(enabled: false, drag: $drag,
+                                                            onDragStarted: {}, onDecision: { _ in }),
+                                controlsEnabled: false)
+                    .id(review.nextAsset?.localIdentifier)
+            } else if let image = review.nextImage {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()

@@ -3,7 +3,11 @@ import Observation
 import SwiftUI
 
 struct ReviewVideoCard<DragSurface: ViewModifier>: View {
-    let player: AVPlayer
+    let player: AVPlayer?
+    let poster: UIImage?
+    let durationHint: Double
+    let isLoading: Bool
+    let mediaError: String?
     let dragSurface: DragSurface
     let controlsEnabled: Bool
     @Environment(\.scenePhase) private var scenePhase
@@ -13,11 +17,18 @@ struct ReviewVideoCard<DragSurface: ViewModifier>: View {
         VStack(spacing: 0) {
             ZStack {
                 Color.black
-                ReviewVideoSurface(player: player).allowsHitTesting(false)
-                if let error = playback.errorMessage {
+                if let poster {
+                    Image(uiImage: poster).resizable().scaledToFit()
+                }
+                if let player {
+                    ReviewVideoSurface(player: player)
+                        .opacity(playback.isReady ? 1 : 0)
+                        .allowsHitTesting(false)
+                }
+                if let error = mediaError ?? playback.errorMessage {
                     Text(error).font(.subheadline).foregroundStyle(.white)
                         .multilineTextAlignment(.center).padding(24)
-                } else if !playback.isReady {
+                } else if poster == nil && (isLoading || player != nil && !playback.isReady) {
                     ProgressView().tint(.white)
                 }
             }
@@ -35,15 +46,15 @@ struct ReviewVideoCard<DragSurface: ViewModifier>: View {
                 .accessibilityIdentifier("review.video.playPause")
                 VStack(spacing: 0) {
                     Slider(value: Binding(get: { playback.position }, set: { playback.position = $0 }),
-                           in: 0...max(playback.duration, 1), onEditingChanged: playback.setScrubbing)
-                        .disabled(playback.duration <= 0 || !playback.isReady)
+                           in: 0...max(displayDuration, 1), onEditingChanged: playback.setScrubbing)
+                        .disabled(displayDuration <= 0 || !playback.isReady)
                         .accessibilityLabel(String(localized: "Video position"))
                         .accessibilityValue(timeLabel(playback.position))
                         .accessibilityIdentifier("review.video.timeline")
                     HStack {
                         Text(timeLabel(playback.position))
                         Spacer()
-                        Text(timeLabel(playback.duration))
+                        Text(timeLabel(displayDuration))
                     }
                     .font(.caption2).monospacedDigit().foregroundStyle(.secondary)
                 }
@@ -51,6 +62,7 @@ struct ReviewVideoCard<DragSurface: ViewModifier>: View {
                     Image(systemName: playback.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
                         .frame(width: 44, height: 44)
                 }
+                .disabled(!playback.isReady)
                 .accessibilityLabel(playback.isMuted ? String(localized: "Unmute video") : String(localized: "Mute video"))
                 .accessibilityIdentifier("review.video.mute")
             }
@@ -60,8 +72,8 @@ struct ReviewVideoCard<DragSurface: ViewModifier>: View {
             .background(.regularMaterial)
             .allowsHitTesting(controlsEnabled)
         }
-        .onAppear { playback.attach(player) }
-        .onChange(of: ObjectIdentifier(player)) { _, _ in playback.attach(player) }
+        .onAppear { attachPlayer() }
+        .onChange(of: player.map { ObjectIdentifier($0) }) { _, _ in attachPlayer() }
         .onChange(of: controlsEnabled) { _, enabled in
             if !enabled { playback.pause() }
         }
@@ -69,6 +81,15 @@ struct ReviewVideoCard<DragSurface: ViewModifier>: View {
             if phase != .active { playback.pause() }
         }
         .onDisappear { playback.detach() }
+    }
+
+    private var displayDuration: Double {
+        playback.duration > 0 ? playback.duration : max(0, durationHint.isFinite ? durationHint : 0)
+    }
+
+    private func attachPlayer() {
+        if let player { playback.attach(player) }
+        else { playback.detach() }
     }
 
     private func timeLabel(_ time: Double) -> String {
