@@ -2,14 +2,20 @@ import SwiftUI
 import StoreKit
 
 struct ProPurchaseView: View {
-    let allowance: FreeAllowance
-    let remainingSelections: Int
+    let allowance: FreeAllowance?
+    let remainingSelections: Int?
     let onUnlock: () -> Void
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var scenePhase
     private let access = ProAccess.shared
     @State private var cancelled = false
     @State private var completed = false
+
+    init(allowance: FreeAllowance? = nil, remainingSelections: Int? = nil, onUnlock: @escaping () -> Void) {
+        self.allowance = allowance
+        self.remainingSelections = remainingSelections
+        self.onUnlock = onUnlock
+    }
 
     var body: some View {
         NavigationStack {
@@ -46,7 +52,9 @@ struct ProPurchaseView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(String(localized: "Your free allowance")).font(.subheadline.weight(.semibold))
                         Text(String(localized: "Up to 50 deletions and 10 resize or Make static actions per run."))
-                        Text(String(localized: "You can select \(remainingSelections) more \(allowance.title) in this review."))
+                        if let allowance, let remainingSelections {
+                            Text(String(localized: "You can select \(remainingSelections) more \(allowance.title) in this review."))
+                        }
                     }
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -134,10 +142,12 @@ struct ProPurchaseView: View {
             }
             .font(.subheadline)
             .disabled(access.isPurchasing || access.isRestoring || access.isLoading)
-            Text(String(localized: "Cancel keeps your selections unchanged."))
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
+            if allowance != nil {
+                Text(String(localized: "Cancel keeps your selections unchanged."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
         }
         .padding(24)
         .frame(maxWidth: 600)

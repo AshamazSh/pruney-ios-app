@@ -13,7 +13,14 @@ nonisolated enum FreeAllowance: String, Identifiable {
 final class ProAccess {
     static let shared = ProAccess()
     static let productID = "com.ashamazsh.pruney.pro.lifetime"
-    private(set) var isPro = false
+    private static var simulatesPro: Bool {
+        #if DEBUG && PRUNEY_SIMULATE_PRO_YES
+        true
+        #else
+        false
+        #endif
+    }
+    private(set) var isPro = ProAccess.simulatesPro
     private(set) var product: Product?
     private(set) var isLoading = false
     private(set) var isPurchasing = false
@@ -26,6 +33,11 @@ final class ProAccess {
     private init() {}
 
     func start() async {
+        guard !Self.simulatesPro else {
+            isPro = true
+            message = nil
+            return
+        }
         if !started {
             started = true
             updatesTask = Task { [weak self] in
@@ -42,6 +54,10 @@ final class ProAccess {
     }
 
     private func refreshEntitlement() async {
+        guard !Self.simulatesPro else {
+            isPro = true
+            return
+        }
         let token = UUID()
         entitlementGeneration = token
         var entitled = false
@@ -57,6 +73,7 @@ final class ProAccess {
     }
 
     func loadProduct() async {
+        guard !Self.simulatesPro else { return }
         guard !isLoading else { return }
         isLoading = true
         message = nil
@@ -96,6 +113,11 @@ final class ProAccess {
     }
 
     func restore() async {
+        guard !Self.simulatesPro else {
+            isPro = true
+            message = nil
+            return
+        }
         guard !isRestoring, !isPurchasing else { return }
         isRestoring = true
         message = nil

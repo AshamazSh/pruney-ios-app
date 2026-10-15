@@ -28,6 +28,8 @@ struct ContentView: View {
     @State private var showingFilters = false
     @State private var showingRecentlyDeletedNotice = false
     @State private var pendingRecentlyDeletedNotice = false
+    @State private var showingPurchase = false
+    private let access = ProAccess.shared
 
     var body: some View {
         Group {
@@ -131,6 +133,9 @@ struct ContentView: View {
                     } else {
                         accessError
                     }
+                    if !analysis.isAnalyzing {
+                        upgradeControl
+                    }
                 }
                 .padding(24)
                 .frame(maxWidth: 600)
@@ -139,6 +144,9 @@ struct ContentView: View {
             .background(PruneyStyle.background)
             .navigationTitle("Pruney")
             .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $showingPurchase) {
+                ProPurchaseView(onUnlock: {})
+            }
             .navigationDestination(isPresented: $showingSwipeReview) {
                 SwipeReviewView(onReturnToLibrary: { didRemoveAssets in
                     pendingRecentlyDeletedNotice = didRemoveAssets
@@ -157,7 +165,7 @@ struct ContentView: View {
                 if analysis.canRead {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button(String(localized: "Refresh totals"), systemImage: "arrow.clockwise") {
-                            analysis.analyze()
+                            analysis.analyze(forceRemeasure: true)
                         }
                         .labelStyle(.iconOnly)
                         .disabled(analysis.isAnalyzing)
@@ -175,6 +183,30 @@ struct ContentView: View {
                     pendingRecentlyDeletedNotice = false
                     showingRecentlyDeletedNotice = true
                 }
+            }
+        }
+    }
+
+    private var upgradeControl: some View {
+        Group {
+            if access.isPro {
+                Label(String(localized: "Pruney Pro is active"), systemImage: "checkmark.seal.fill")
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(PruneyStyle.plum)
+                    .frame(maxWidth: .infinity)
+                    .accessibilityIdentifier("library.proActive")
+            } else {
+                Button {
+                    showingPurchase = true
+                } label: {
+                    Label(String(localized: "Remove all limits"), systemImage: "crown.fill")
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .foregroundStyle(PruneyStyle.onAccent)
+                .accessibilityIdentifier("library.unlockLimits")
             }
         }
     }
@@ -207,7 +239,9 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 24) {
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 6) {
-                    Text(analysis.isAnalyzing ? String(localized: "Measured so far") : String(localized: "Accessible file size"))
+                    Text(analysis.isAnalyzing ? String(localized: "Measured so far")
+                         : analysis.summary.cachedCount > 0 ? String(localized: "Measured file size")
+                         : String(localized: "Accessible file size"))
                         .font(.subheadline).foregroundStyle(.secondary)
                     Image(systemName: "info.circle")
                         .font(.subheadline)
@@ -238,6 +272,12 @@ struct ContentView: View {
                     .font(.footnote).foregroundStyle(.secondary)
             }
             StorageBar(summary: analysis.summary)
+            if analysis.summary.cachedCount > 0 {
+                Text(String(localized: "Includes saved sizes for unchanged items. Local availability may have changed."))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier("library.cachedMeasurements")
+            }
             if analysis.summary.unavailableCount > 0 {
                 Text(String(localized: "Some items couldn’t be fully measured. Tap ⓘ for details."))
                     .font(.footnote)
@@ -278,6 +318,11 @@ struct ContentView: View {
             Text(String(localized: "We measure accessible local files, including the photo and motion in Live Photos. This may differ from the storage shown in iPhone Settings. Files in iCloud aren’t downloaded."))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
+            if analysis.summary.cachedCount > 0 {
+                Text(String(localized: "Saved measurements speed up startup. Tap Refresh totals to read all local files again. Files that moved to iCloud may still have a saved size."))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
             if analysis.summary.unavailableCount > 0 {
                 Text(String(localized: "Couldn’t fully measure \(analysis.summary.unavailableCount) items. They may be stored in iCloud. The total size is incomplete."))
                     .font(.subheadline)

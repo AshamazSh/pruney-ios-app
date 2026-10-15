@@ -40,6 +40,8 @@ These instructions apply to the repository. Read `README.md` for the implemented
 - Free limits apply per execution run: up to 50 selected deletions and 10 selected resize/Make static replacements, independently. There is no cumulative or daily usage limit. Review selections reserve capacity for the current run; undo/reset release reservations. Check before advancing an individual card or selecting a bulk action. Cancel preserves the current card and choices; reject over-limit bulk actions completely. Keep is unlimited. Do not count replacement originals as additional deletions. Revalidate the selected plan before execution. New reviews get full capacity; do not persist or deduct completed usage.
 - Pruney Pro is a non-consumable lifetime StoreKit purchase, not a subscription. Grant unlimited access only for verified, non-revoked transactions of the configured product. Keep Restore purchases, localized StoreKit prices, transaction observation, and explicit unavailable/pending/failure handling. Free limits use current session selections only; do not restore cumulative Keychain usage tracking.
 
+- Development-only exception: the user-authorized `PRUNEY_SIMULATE_PRO` app target Build Setting defaults to `NO`; `YES` generates `PRUNEY_SIMULATE_PRO_YES` for Debug only. Simulate lifetime Pro only when both that compilation condition and `DEBUG` are defined. Keep it off by default, never persist the simulated entitlement, and preserve normal StoreKit verification when simulation is disabled. Do not enable it in Release or use it to validate free quotas or real purchases.
+
 ## Project and validation
 
 - Use `Pruney.xcodeproj` and the `Pruney` scheme. Source folders are synchronized with the Xcode project; avoid unnecessary manual file references.

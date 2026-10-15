@@ -1,6 +1,6 @@
 # Privacy Policy for Pruney
 
-**Last updated: October 6, 2026**
+**Last updated: October 15, 2026**
 
 Pruney is provided by Ashamaz Shidov ("we," "us," or "our"). This Privacy Policy explains how information is handled when you use the Pruney iOS app.
 
@@ -15,6 +15,8 @@ Pruney does not send your photo library, media files, or library analysis to us 
 ## Local processing and storage
 
 Library analysis and media preparation take place on your device. Pruney creates temporary local files when preparing replacements or sharing media. It attempts to remove these files when the operation ends or the share sheet is dismissed. An interruption or storage error may leave temporary files until they are removed by the app, the operating system, or deletion of the app.
+
+Pruney keeps an on-device cache of file-size measurements to speed up library analysis. This cache contains local asset identifiers, related media metadata and resource descriptors, measured byte counts, and a Photos change-history token; it does not contain copies of your photos or videos. Entries are reconciled with the library items Pruney can currently access, and cache removal is requested when Photos access is revoked. The operating system may also remove cached data.
 
 Pruney stores basic app preferences locally, including whether you have completed onboarding. Review decisions and action settings are held for the current session rather than uploaded to us.
 

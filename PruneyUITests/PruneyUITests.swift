@@ -45,7 +45,9 @@ final class PruneyUITests: XCTestCase {
         let fullAccess = alert.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Full Access' OR label CONTAINS[c] 'полный доступ' OR label CONTAINS[c] 'ко всем'" )).firstMatch
         XCTAssertTrue(fullAccess.exists)
         fullAccess.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-        XCTAssertTrue(app.staticTexts["Accessible file size"].waitForExistence(timeout: 30))
+        let sizeHeading = app.staticTexts.matching(NSPredicate(format: "label IN %@",
+            ["Accessible file size", "Measured file size"])).firstMatch
+        XCTAssertTrue(sizeHeading.waitForExistence(timeout: 30))
         XCTAssertTrue(app.staticTexts["Live Photos"].exists)
         XCTAssertTrue(app.staticTexts["Videos"].exists)
         let overview = XCTAttachment(screenshot: app.screenshot())

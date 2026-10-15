@@ -56,7 +56,7 @@ Both Debug and Release simulator builds succeeded. The generated artwork was ins
 
 ## Privacy policy
 
-`privacy-policy.md` contains the English Privacy Policy for the implemented app, naming Ashamaz Shidov and the contact address provided by the developer. It covers on-device Photos processing, local preferences and temporary files, user-initiated sharing, Apple purchases and diagnostics, support correspondence, and user choices. Publish it at a publicly accessible URL for App Store Connect. The policy is not yet linked inside the app, and creating this document does not publish it or change App Store Connect privacy answers. Review and update the support-handling commitments if operational practices change. No translations were created.
+`privacy-policy.md` contains the English Privacy Policy for the implemented app, naming Ashamaz Shidov and the contact address provided by the developer. It covers on-device Photos processing, the local measurement cache, local preferences and temporary files, user-initiated sharing, Apple purchases and diagnostics, support correspondence, and user choices. Publish it at a publicly accessible URL for App Store Connect. The policy is not yet linked inside the app, and creating this document does not publish it or change App Store Connect privacy answers. Review and update the support-handling commitments if operational practices change. No translations were created.
 
 ## App Review notes
 
